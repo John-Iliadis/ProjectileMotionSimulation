@@ -34,7 +34,9 @@ add_executable(${PROJECT_NAME}
         src/rendering/vertex_buffer_layout.cpp
         src/rendering/vertex_buffer_layout.hpp
         src/utilities/utils.cpp
-        src/utilities/utils.hpp)
+        src/utilities/utils.hpp
+        src/rendering/vertex_array.cpp
+        src/rendering/vertex_array.hpp)
 
 find_package(OpenGL REQUIRED)
 
