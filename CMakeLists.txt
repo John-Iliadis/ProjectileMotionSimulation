@@ -24,7 +24,9 @@ add_executable(${PROJECT_NAME}
         src/window/window.cpp
         src/window/window.hpp
         src/window/window_base.cpp
-        src/window/window_base.hpp)
+        src/window/window_base.hpp
+        src/rendering/shader.cpp
+        src/rendering/shader.hpp)
 
 find_package(OpenGL REQUIRED)
 
