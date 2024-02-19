@@ -30,7 +30,11 @@ add_executable(${PROJECT_NAME}
         src/rendering/vertex_buffer_static.cpp
         src/rendering/vertex_buffer_static.hpp
         src/rendering/index_buffer_static.cpp
-        src/rendering/index_buffer_static.hpp)
+        src/rendering/index_buffer_static.hpp
+        src/rendering/vertex_buffer_layout.cpp
+        src/rendering/vertex_buffer_layout.hpp
+        src/utilities/utils.cpp
+        src/utilities/utils.hpp)
 
 find_package(OpenGL REQUIRED)
 
