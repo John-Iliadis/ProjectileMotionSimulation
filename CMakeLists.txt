@@ -36,7 +36,9 @@ add_executable(${PROJECT_NAME}
         src/utilities/utils.cpp
         src/utilities/utils.hpp
         src/rendering/vertex_array.cpp
-        src/rendering/vertex_array.hpp)
+        src/rendering/vertex_array.hpp
+        src/rendering/frame_buffer.cpp
+        src/rendering/frame_buffer.hpp)
 
 find_package(OpenGL REQUIRED)
 
