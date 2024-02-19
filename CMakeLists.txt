@@ -38,7 +38,10 @@ add_executable(${PROJECT_NAME}
         src/rendering/vertex_array.cpp
         src/rendering/vertex_array.hpp
         src/rendering/frame_buffer.cpp
-        src/rendering/frame_buffer.hpp)
+        src/rendering/frame_buffer.hpp
+        src/rendering/rendering_includes.hpp
+        src/gui/imgui_context.cpp
+        src/gui/imgui_context.hpp)
 
 find_package(OpenGL REQUIRED)
 

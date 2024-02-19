@@ -12,11 +12,6 @@ Shader::Shader()
 
 Shader::Shader(const std::string &vs_file, const std::string &fs_file)
 {
-    if (m_renderer_id)
-    {
-        delete_shader();
-    }
-
     std::string vs_src = parse_shader(vs_file);
     std::string fs_src = parse_shader(fs_file);
 

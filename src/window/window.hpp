@@ -5,6 +5,8 @@
 #ifndef PROJECTILEMOTIONSIM_WINDOW_HPP
 #define PROJECTILEMOTIONSIM_WINDOW_HPP
 
+#include "../rendering/rendering_includes.hpp"
+#include "../gui/imgui_context.hpp"
 #include "window_base.hpp"
 
 
@@ -16,6 +18,9 @@ public:
 
 private:
     static void key_callback(GLFWwindow* p_window, int key, int scancode, int action, int mods);
+
+private:
+    IMGUI_Context imgui_context;
 };
 
 

@@ -62,7 +62,7 @@ void VertexArray::attach_vertex_buffer(const VertexBufferStatic &vbo, const Vert
     for (const auto& attribute : layout.get_attributes())
     {
         glEnableVertexAttribArray(attribute.index);
-        glVertexAttribPointer(attribute.index, attribute.size, attribute.type, attribute.normalized, layout.get_stride(), reinterpret_cast<void*>(offset));
+        glVertexAttribPointer(attribute.index, attribute.size, attribute.type, attribute.normalize, layout.get_stride(), reinterpret_cast<void*>(offset));
         offset += attribute.size * utils::gl_sizeof(attribute.type);
     }
 

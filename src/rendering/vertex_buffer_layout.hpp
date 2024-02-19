@@ -18,7 +18,7 @@ public:
         uint32_t index;
         uint32_t size;
         uint32_t type;
-        uint32_t normalized;
+        uint32_t normalize;
     };
 
 public:
