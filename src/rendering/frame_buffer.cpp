@@ -68,7 +68,7 @@ void FrameBuffer::resize(uint32_t width, uint32_t height)
     if (width == 0 || height == 0)
     {
         std::cout << "FrameBuffer::resize: Attempted to resize framebuffer to " +
-                     std::to_string(width) + 'x' + std::to_string(height) + '\n';
+                     std::to_string(width) + 'x' + std::to_string(height) << std::endl;
 
         return;
     }
@@ -91,8 +91,6 @@ void FrameBuffer::destroy()
 
         m_renderer_id = 0;
         m_texture_id = 0;
-        m_width = 0;
-        m_height = 0;
     }
 }
 
@@ -115,7 +113,7 @@ void FrameBuffer::create()
 {
     destroy();
 
-    glGenFramebuffers(GL_FRAMEBUFFER, &m_renderer_id);
+    glGenFramebuffers(1, &m_renderer_id);
     glBindFramebuffer(GL_FRAMEBUFFER, m_renderer_id);
 
     // todo: used multi-sampled texture

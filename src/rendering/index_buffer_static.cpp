@@ -22,7 +22,13 @@ IndexBufferStatic::IndexBufferStatic(const void *data, uint32_t count)
 
 IndexBufferStatic::~IndexBufferStatic()
 {
-    delete_buffer();
+    if (m_renderer_id)
+    {
+        glDeleteBuffers(1, &m_renderer_id);
+
+        m_renderer_id = 0;
+        m_count = 0;
+    }
 }
 
 IndexBufferStatic::IndexBufferStatic(IndexBufferStatic &&other) noexcept
@@ -30,7 +36,8 @@ IndexBufferStatic::IndexBufferStatic(IndexBufferStatic &&other) noexcept
     m_renderer_id = other.m_renderer_id;
     m_count = other.m_count;
 
-    other.delete_buffer();
+    other.m_renderer_id = 0;
+    other.m_count = 0;
 }
 
 IndexBufferStatic &IndexBufferStatic::operator=(IndexBufferStatic &&other) noexcept
@@ -40,7 +47,8 @@ IndexBufferStatic &IndexBufferStatic::operator=(IndexBufferStatic &&other) noexc
         m_renderer_id = other.m_renderer_id;
         m_count = other.m_count;
 
-        other.delete_buffer();
+        other.m_renderer_id = 0;
+        other.m_count = 0;
     }
 
     return *this;
@@ -59,15 +67,4 @@ void IndexBufferStatic::unbind() const
 uint32_t IndexBufferStatic::get_count() const
 {
     return m_count;
-}
-
-void IndexBufferStatic::delete_buffer()
-{
-    if (m_renderer_id)
-    {
-        glDeleteBuffers(1, &m_renderer_id);
-
-        m_renderer_id = 0;
-        m_count = 0;
-    }
 }

@@ -27,9 +27,6 @@ public:
     uint32_t get_count() const;
 
 private:
-    void delete_buffer();
-
-private:
     uint32_t m_renderer_id;
     uint32_t m_count;
 };

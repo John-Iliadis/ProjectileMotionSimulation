@@ -32,9 +32,6 @@ public:
     uint32_t get_index_count() const;
 
 private:
-    void delete_vertex_array();
-
-private:
     uint32_t m_renderer_id;
     uint32_t m_vertex_count;
     uint32_t m_index_count;

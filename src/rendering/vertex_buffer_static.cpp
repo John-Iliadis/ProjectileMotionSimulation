@@ -4,6 +4,7 @@
 
 #include "vertex_buffer_static.hpp"
 
+
 VertexBufferStatic::VertexBufferStatic()
     : m_renderer_id()
     , m_count()
@@ -21,7 +22,13 @@ VertexBufferStatic::VertexBufferStatic(const void *data, uint32_t count)
 
 VertexBufferStatic::~VertexBufferStatic()
 {
-    delete_buffer();
+    if (m_renderer_id)
+    {
+        glDeleteBuffers(1, &m_renderer_id);
+
+        m_renderer_id = 0;
+        m_count = 0;
+    }
 }
 
 VertexBufferStatic::VertexBufferStatic(VertexBufferStatic &&other) noexcept
@@ -29,7 +36,8 @@ VertexBufferStatic::VertexBufferStatic(VertexBufferStatic &&other) noexcept
     m_renderer_id = other.m_renderer_id;
     m_count = other.m_count;
 
-    other.delete_buffer();
+    other.m_renderer_id = 0;
+    other.m_count = 0;
 }
 
 VertexBufferStatic &VertexBufferStatic::operator=(VertexBufferStatic &&other) noexcept
@@ -39,7 +47,8 @@ VertexBufferStatic &VertexBufferStatic::operator=(VertexBufferStatic &&other) no
         m_renderer_id = other.m_renderer_id;
         m_count = other.m_count;
 
-        other.delete_buffer();
+        other.m_renderer_id = 0;
+        other.m_count = 0;
     }
 
     return *this;
@@ -58,15 +67,4 @@ void VertexBufferStatic::unbind() const
 uint32_t VertexBufferStatic::get_count() const
 {
     return m_count;
-}
-
-void VertexBufferStatic::delete_buffer()
-{
-    if (m_renderer_id)
-    {
-        glDeleteBuffers(1, &m_renderer_id);
-
-        m_renderer_id = 0;
-        m_count = 0;
-    }
 }

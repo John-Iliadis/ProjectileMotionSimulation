@@ -14,7 +14,14 @@ VertexArray::VertexArray()
 
 VertexArray::~VertexArray()
 {
-    delete_vertex_array();
+    if (m_renderer_id)
+    {
+        glDeleteVertexArrays(1, &m_renderer_id);
+
+        m_renderer_id = 0;
+        m_vertex_count = 0;
+        m_index_count = 0;
+    }
 }
 
 VertexArray::VertexArray(VertexArray &&other) noexcept
@@ -23,7 +30,9 @@ VertexArray::VertexArray(VertexArray &&other) noexcept
     m_vertex_count = other.m_vertex_count;
     m_index_count = other.m_index_count;
 
-    other.delete_vertex_array();
+    other.m_renderer_id = 0;
+    other.m_vertex_count = 0;
+    other.m_index_count = 0;
 }
 
 VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
@@ -34,7 +43,9 @@ VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
         m_vertex_count = other.m_vertex_count;
         m_index_count = other.m_index_count;
 
-        other.delete_vertex_array();
+        other.m_renderer_id = 0;
+        other.m_vertex_count = 0;
+        other.m_index_count = 0;
     }
 
     return *this;
@@ -89,16 +100,4 @@ uint32_t VertexArray::get_vertex_count() const
 uint32_t VertexArray::get_index_count() const
 {
     return m_index_count;
-}
-
-void VertexArray::delete_vertex_array()
-{
-    if (m_renderer_id)
-    {
-        glDeleteVertexArrays(1, &m_renderer_id);
-
-        m_renderer_id = 0;
-        m_vertex_count = 0;
-        m_index_count = 0;
-    }
 }
