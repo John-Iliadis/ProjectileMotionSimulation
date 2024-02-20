@@ -24,7 +24,8 @@ private:
     void resize_scene(uint32_t width, uint32_t height);
 
 private:
-    FrameBuffer m_frame_buffer;
+    FrameBuffer m_fbo;
+    FrameBuffer m_intermediate_fbo;
     Shader m_shader;
     VertexArray vao;
     VertexBufferStatic vbo;

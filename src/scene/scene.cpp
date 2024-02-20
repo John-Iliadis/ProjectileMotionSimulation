@@ -6,7 +6,8 @@
 
 
 Scene::Scene(uint32_t width, uint32_t height)
-    : m_frame_buffer(width, height)
+    : m_fbo(GL_TEXTURE_2D, width, height)
+    , m_intermediate_fbo(GL_TEXTURE_2D, width, height)
     , m_shader("../shaders/vert.vert", "../shaders/frag.frag")
     , m_width(width)
     , m_height(height)
@@ -66,7 +67,7 @@ void Scene::pre_render()
         }
     }
 
-    m_frame_buffer.bind();
+    m_fbo.bind();
 
     glClearColor(35 / 255.f, 45 / 255.f, 55 / 255.f, 1);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -74,9 +75,13 @@ void Scene::pre_render()
 
 void Scene::post_render()
 {
-    m_frame_buffer.unbind();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo.get_framebuffer_id());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_intermediate_fbo.get_framebuffer_id());
+    glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-    uint32_t render_buffer_texture_id = m_frame_buffer.get_texture_id();
+    m_fbo.unbind();
+
+    uint32_t render_buffer_texture_id = m_intermediate_fbo.get_texture_id();
 
     ImGui::Image(reinterpret_cast<void*>(render_buffer_texture_id), ImVec2(m_width, m_height), ImVec2(0, 1), ImVec2(1, 0));
     ImGui::End();
@@ -88,5 +93,6 @@ void Scene::resize_scene(uint32_t width, uint32_t height)
     m_width = width;
     m_height = height;
 
-    m_frame_buffer.resize(m_width, m_height);
+    m_fbo.resize(m_width, m_height);
+    m_intermediate_fbo.resize(m_width, m_height);
 }
