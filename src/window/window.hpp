@@ -7,6 +7,7 @@
 
 #include "../rendering/rendering_includes.hpp"
 #include "../gui/imgui_context.hpp"
+#include "../scene/scene.hpp"
 #include "window_base.hpp"
 
 
@@ -21,6 +22,7 @@ private:
 
 private:
     IMGUI_Context imgui_context;
+    Scene m_scene;
 };
 
 

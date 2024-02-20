@@ -41,9 +41,13 @@ add_executable(${PROJECT_NAME}
         src/rendering/frame_buffer.hpp
         src/rendering/rendering_includes.hpp
         src/gui/imgui_context.cpp
-        src/gui/imgui_context.hpp)
+        src/gui/imgui_context.hpp
+        src/scene/scene.cpp
+        src/scene/scene.hpp)
 
 find_package(OpenGL REQUIRED)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${GLAD_DIR}/include
