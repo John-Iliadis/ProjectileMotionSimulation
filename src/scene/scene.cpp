@@ -30,12 +30,9 @@ Scene::Scene(uint32_t width, uint32_t height)
     m_shader.bind();
 }
 
-void Scene::resize_scene(uint32_t width, uint32_t height)
+void Scene::update(double dt)
 {
-    m_width = width;
-    m_height = height;
 
-    m_frame_buffer.resize(m_width, m_height);
 }
 
 void Scene::render()
@@ -84,4 +81,12 @@ void Scene::post_render()
     ImGui::Image(reinterpret_cast<void*>(render_buffer_texture_id), ImVec2(m_width, m_height), ImVec2(0, 1), ImVec2(1, 0));
     ImGui::End();
     ImGui::PopStyleVar(2);
+}
+
+void Scene::resize_scene(uint32_t width, uint32_t height)
+{
+    m_width = width;
+    m_height = height;
+
+    m_frame_buffer.resize(m_width, m_height);
 }

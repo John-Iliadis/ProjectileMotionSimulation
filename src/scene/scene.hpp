@@ -9,10 +9,13 @@
 #include <imgui/imgui.h>
 #include "../rendering/rendering_includes.hpp"
 
+
 class Scene
 {
 public:
     Scene(uint32_t width, uint32_t height);
+
+    void update(double dt);
     void render();
 
 private:

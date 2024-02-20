@@ -18,11 +18,17 @@ public:
     void run();
 
 private:
+    void update(double dt);
+    void render();
+    void update_frame_counter(double dt);
+
     static void key_callback(GLFWwindow* p_window, int key, int scancode, int action, int mods);
 
 private:
     IMGUI_Context imgui_context;
     Scene m_scene;
+    double fps_update_time;
+    uint32_t m_frame_count;
 };
 
 
