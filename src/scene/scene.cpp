@@ -98,4 +98,8 @@ void Scene::resize_scene(uint32_t width, uint32_t height)
 
     m_fbo.resize(m_width, m_height);
     m_intermediate_fbo.resize(m_width, m_height);
+
+    float aspect_ratio = static_cast<float>(m_width) / static_cast<float>(m_height);
+
+    m_camera.set_projection(-aspect_ratio, aspect_ratio, -1, 1, 0, 1);
 }
