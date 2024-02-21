@@ -48,6 +48,11 @@ FrameBuffer &FrameBuffer::operator=(FrameBuffer &&other) noexcept
 {
     if (this != &other)
     {
+        if (m_renderer_id)
+        {
+            destroy();
+        }
+
         m_texture_type = other.m_texture_type;
         m_renderer_id = other.m_renderer_id;
         m_texture_id = other.m_texture_id;

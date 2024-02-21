@@ -44,6 +44,11 @@ VertexBufferStatic &VertexBufferStatic::operator=(VertexBufferStatic &&other) no
 {
     if (this != &other)
     {
+        if (m_renderer_id)
+        {
+            glDeleteBuffers(1, &m_renderer_id);
+        }
+
         m_renderer_id = other.m_renderer_id;
         m_count = other.m_count;
 

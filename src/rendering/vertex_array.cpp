@@ -39,6 +39,11 @@ VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
 {
     if (this != &other)
     {
+        if (m_renderer_id)
+        {
+            glDeleteVertexArrays(1, &m_renderer_id);
+        }
+
         m_renderer_id = other.m_renderer_id;
         m_vertex_count = other.m_vertex_count;
         m_index_count = other.m_index_count;

@@ -45,6 +45,11 @@ Shader &Shader::operator=(Shader &&other) noexcept
 {
     if (this != &other)
     {
+        if (m_renderer_id)
+        {
+            delete_shader();
+        }
+
         m_renderer_id = other.m_renderer_id;
         m_uniform_location_cache = std::move(other.m_uniform_location_cache);
 
