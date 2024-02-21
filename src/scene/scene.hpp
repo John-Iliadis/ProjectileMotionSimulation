@@ -8,6 +8,7 @@
 #include <glfw/glfw3.h>
 #include <imgui/imgui.h>
 #include "../rendering/rendering_includes.hpp"
+#include "../camera/orthographic_camera.hpp"
 
 
 class Scene
@@ -27,6 +28,7 @@ private:
     FrameBuffer m_fbo;
     FrameBuffer m_intermediate_fbo;
     Shader m_shader;
+    OrthographicCamera m_camera;
     VertexArray vao;
     VertexBufferStatic vbo;
     uint32_t m_width;

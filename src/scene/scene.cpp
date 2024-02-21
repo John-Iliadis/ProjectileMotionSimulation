@@ -6,9 +6,10 @@
 
 
 Scene::Scene(uint32_t width, uint32_t height)
-    : m_fbo(GL_TEXTURE_2D, width, height)
+    : m_fbo(GL_TEXTURE_2D_MULTISAMPLE, width, height)
     , m_intermediate_fbo(GL_TEXTURE_2D, width, height)
     , m_shader("../shaders/vert.vert", "../shaders/frag.frag")
+    , m_camera(-1, 1, -1, 1)
     , m_width(width)
     , m_height(height)
 {
@@ -39,6 +40,8 @@ void Scene::update(double dt)
 void Scene::render()
 {
     pre_render();
+
+    m_shader.set_mat4("u_view_projection_matrix", m_camera.get_view_projection_matrix());
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     post_render();

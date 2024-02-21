@@ -43,7 +43,9 @@ add_executable(${PROJECT_NAME}
         src/gui/imgui_context.cpp
         src/gui/imgui_context.hpp
         src/scene/scene.cpp
-        src/scene/scene.hpp)
+        src/scene/scene.hpp
+        src/camera/orthographic_camera.cpp
+        src/camera/orthographic_camera.hpp)
 
 find_package(OpenGL REQUIRED)
 
