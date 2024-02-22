@@ -9,6 +9,7 @@
 #include <imgui/imgui.h>
 #include "../rendering/rendering_includes.hpp"
 #include "../camera/orthographic_camera.hpp"
+#include "graph.hpp"
 
 
 class Scene
@@ -27,14 +28,16 @@ private:
 private:
     FrameBuffer m_fbo;
     FrameBuffer m_intermediate_fbo;
-    Shader m_shader;
     OrthographicCamera m_camera;
-    VertexArray vao;
-    VertexBufferStatic vbo;
+    Shader m_graph_shader;
+    Graph m_graph;
+
     uint32_t m_width;
     uint32_t m_height;
 
-    std::vector<float> vertices;
+    std::vector<float> m_vertices;
+    VertexArray m_vao;
+    VertexBufferStatic m_vbo;
 };
 
 

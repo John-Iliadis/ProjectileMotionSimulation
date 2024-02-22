@@ -45,7 +45,9 @@ add_executable(${PROJECT_NAME}
         src/scene/scene.cpp
         src/scene/scene.hpp
         src/camera/orthographic_camera.cpp
-        src/camera/orthographic_camera.hpp)
+        src/camera/orthographic_camera.hpp
+        src/scene/graph.cpp
+        src/scene/graph.hpp)
 
 find_package(OpenGL REQUIRED)
 

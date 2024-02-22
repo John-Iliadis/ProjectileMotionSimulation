@@ -5,25 +5,32 @@
 #include "orthographic_camera.hpp"
 
 
+OrthographicCamera::OrthographicCamera(float width, float height)
+    : m_projection_matrix(glm::ortho<float>(0, width, 0, height))
+    , m_view_matrix(1)
+    , m_view_projection_matrix(m_projection_matrix)
+    , m_size(width, height)
+    , m_position()
+{
+}
+
 OrthographicCamera::OrthographicCamera()
     : m_projection_matrix(1)
     , m_view_matrix(1)
     , m_view_projection_matrix(1)
+    , m_size()
     , m_position()
 {
 }
 
-OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float near /* = -1*/, float far /* = 1*/)
-    : m_projection_matrix(glm::ortho(left, right, bottom, top, near, far))
-    , m_view_matrix(1)
-    , m_view_projection_matrix(m_projection_matrix)
-    , m_position()
+void OrthographicCamera::set_size(float width, float height)
 {
-}
+    if (m_size == glm::vec2(width, height))
+        return;
 
-void OrthographicCamera::set_projection(float left, float right, float bottom, float top, float near /* = -1*/, float far /* = 1*/)
-{
-    m_projection_matrix = glm::ortho(left, right, bottom, top, near, far);
+    m_size = {width, height};
+
+    m_projection_matrix = glm::ortho<float>(0, width, 0, height);
     m_view_projection_matrix = m_projection_matrix * m_view_matrix;
 }
 
@@ -37,6 +44,11 @@ void OrthographicCamera::set_position(float x, float y, float z)
 {
     m_position = {x, y, z};
     recalculate_view_matrix();
+}
+
+const glm::vec2 &OrthographicCamera::get_size() const
+{
+    return m_size;
 }
 
 const glm::vec3 &OrthographicCamera::get_position() const

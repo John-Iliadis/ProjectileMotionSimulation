@@ -13,13 +13,14 @@ class OrthographicCamera
 {
 public:
     OrthographicCamera();
-    OrthographicCamera(float left, float right, float bottom, float top, float near = -1, float far = 1);
+    OrthographicCamera(float width, float height);
 
-    void set_projection(float left, float right, float bottom, float top, float near = -1, float far = 1);
+    void set_size(float width, float height);
 
     void set_position(const glm::vec3& position);
     void set_position(float x, float y, float z);
 
+    const glm::vec2& get_size() const;
     const glm::vec3& get_position() const;
     const glm::mat4& get_projection_matrix() const;
     const glm::mat4& get_view_matrix() const;
@@ -33,6 +34,7 @@ private:
     glm::mat4 m_view_matrix;
     glm::mat4 m_view_projection_matrix;
 
+    glm::vec2 m_size;
     glm::vec3 m_position;
 };
 
