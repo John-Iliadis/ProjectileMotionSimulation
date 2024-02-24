@@ -3,6 +3,11 @@
 //
 
 #include "window_base.hpp"
+#include "ft2build.h"
+#include FT_FREETYPE_H
+
+
+FT_Library ft_library;
 
 WindowBase::WindowBase(uint32_t width, uint32_t height)
 {
@@ -38,13 +43,21 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
         throw std::runtime_error("WindowBase::WindowBase: Failed to load glad\n");
     }
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(gl_debug_output, nullptr);
+
+    if (FT_Init_FreeType(&ft_library) != FT_Err_Ok)
+    {
+        throw std::runtime_error("WindowBase::WindowBase: Failed to initialize FreeType\n");
+    }
 }
 
 WindowBase::~WindowBase()
 {
+    FT_Done_FreeType(ft_library);
     glfwDestroyWindow(m_window);
     glfwTerminate();
 }
