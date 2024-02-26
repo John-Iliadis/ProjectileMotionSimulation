@@ -8,18 +8,17 @@
 Scene::Scene(uint32_t width, uint32_t height)
     : m_fbo(GL_TEXTURE_2D_MULTISAMPLE, width, height)
     , m_intermediate_fbo(GL_TEXTURE_2D, width, height)
-    //, m_camera(-1, 1, -1, 1)
-   // , m_camera(1, 1)
     , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
     , m_width(width)
     , m_height(height)
+    , m_arial_48("../assets/fonts/arial.ttf", 48)
 {
-    m_vertices = {
-            0, 0,
-            100, 200,
-            200, 0
-    };
-
+//    m_vertices = {
+//            0, 0,
+//            100, 200,
+//            200, 0
+//    };
+//
 //    m_vbo = VertexBufferStatic(m_vertices.data(), m_vertices.size());
 //
 //    VertexBufferLayout layout {
@@ -61,7 +60,7 @@ void Scene::pre_render()
     ImGui::Begin("Scene");
 
     // todo: check if window is docked
-    glm::vec<2, uint32_t> window_size {
+    glm::uvec2 window_size {
             static_cast<uint32_t>(ImGui::GetContentRegionAvail().x),
             static_cast<uint32_t>(ImGui::GetContentRegionAvail().y)
     };
@@ -109,9 +108,5 @@ void Scene::resize_scene(uint32_t width, uint32_t height)
     m_fbo.resize(m_width, m_height);
     m_intermediate_fbo.resize(m_width, m_height);
 
-    //float aspect_ratio = static_cast<float>(m_width) / static_cast<float>(m_height);
-
     m_camera.set_size(width, height);
-//    m_camera.set_aspect_ratio(aspect_ratio);
-//    m_camera.set_projection(-aspect_ratio, aspect_ratio, -1, 1, 0, 1);
 }

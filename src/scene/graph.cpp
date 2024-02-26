@@ -25,9 +25,7 @@ void Graph::create(float width, float height)
 
     m_vbo = VertexBufferStatic(m_vertices.data(), m_vertices.size());
 
-    VertexBufferLayout layout {
-            VertexBufferLayout::attribute(0, 2, GL_FLOAT, GL_FALSE)
-    };
+    VertexBufferLayout layout {{0, 2, GL_FLOAT, GL_FALSE}};
 
     m_vao.attach_vertex_buffer(m_vbo, layout);
 

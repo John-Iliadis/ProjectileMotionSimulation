@@ -8,6 +8,7 @@ set(GLFW_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/glfw)
 set(GLM_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/glm)
 set(IMGUI_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/imgui)
 set(FREE_TYPE_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/free_type)
+set(STB_DIR ${CMAKE_CURRENT_LIST_DIR}/dependencies/stb)
 
 file(GLOB_RECURSE GLAD_SRC ${GLAD_DIR}/*.c)
 file(GLOB_RECURSE GLAD_HEADERS ${GLAD_DIR}/*.h)
@@ -49,8 +50,8 @@ add_executable(${PROJECT_NAME}
         src/camera/orthographic_camera.hpp
         src/scene/graph.cpp
         src/scene/graph.hpp
-        src/text_rendering/font.cpp
-        src/text_rendering/font.hpp)
+        src/text_rendering/font_atlas.cpp
+        src/text_rendering/font_atlas.hpp)
 
 find_package(OpenGL REQUIRED)
 
@@ -61,7 +62,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${GLFW_DIR}/include
         ${GLM_DIR}/include
         ${IMGUI_DIR}/include
-        ${FREE_TYPE_DIR}/include)
+        ${FREE_TYPE_DIR}/include
+        ${STB_DIR}/include)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${OPENGL_LIBRARIES}

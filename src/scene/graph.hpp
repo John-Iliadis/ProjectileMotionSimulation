@@ -28,11 +28,8 @@ private:
 
 private:
     std::vector<float> m_vertices;
-    std::vector<float> m_points;
     VertexArray m_vao;
-    VertexArray m_points_vao;
     VertexBufferStatic m_vbo;
-    VertexBufferStatic m_points_vbo;
 
     float m_width;
     float m_height;
