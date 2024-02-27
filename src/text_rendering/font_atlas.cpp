@@ -10,7 +10,7 @@
 extern FT_Library ft_library;
 
 FontAtlas::FontAtlas()
-    : m_texture_id()
+        : m_texture_id()
 {
 }
 
@@ -25,10 +25,11 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     FT_Set_Pixel_Sizes(face, 0, font_size);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    glm::uvec2 offset;
-    glm::uvec2 texture_size;
+    glm::uvec2 offset{};
+    glm::uvec2 texture_size{};
+    uint32_t max_glyph_height{};
 
-    constexpr uint32_t max_texture_width = 2048;
+    constexpr uint32_t max_texture_width = 1024;
     constexpr uint32_t char_start = 32;
     constexpr uint32_t char_end = 127;
 
@@ -43,34 +44,42 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
 
         character.size = {face->glyph->bitmap.width, face->glyph->bitmap.rows};
         character.bearing = {face->glyph->bitmap_left, face->glyph->bitmap_top};
-        character.advance = face->glyph->advance.x;
+        character.advance = face->glyph->advance.x << 6;
 
-        if (atlas_width + character.size.x <= max_texture_width)
+        if (offset.x + character.size.x <= max_texture_width)
         {
-            character.tex_coords = {atlas_width, atlas_height};
+            character.tex_coords = offset;
+            offset.x += character.size.x;
 
-            offset_x += character.size.x;
-            atlas_width += character.size.x;
-            max_row_height = glm::max(max_row_height, character.size.y);
+            max_glyph_height = glm::max(max_glyph_height, character.size.y);
         }
         else
         {
-            offset_x = 0;
+            offset.x = 0;
+            offset.y += max_glyph_height;
+
+            max_glyph_height = character.size.y;
+
+            character.tex_coords = offset;
+            offset.x += character.size.x;
         }
+
+        texture_size.x = glm::max(texture_size.x, offset.x);
+        texture_size.y = glm::max(texture_size.y, offset.y + max_glyph_height);
 
         m_characters.insert(std::make_pair(i, std::move(character)));
     }
 
     glCreateTextures(GL_TEXTURE_2D, 1, &m_texture_id);
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, max_width, max_height, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, texture_size.x, texture_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    for (uint32_t i = char_start, offset = 0; i < char_end; ++i, offset += face->glyph->bitmap.width)
+    for (uint32_t i = char_start; i < char_end; ++i)
     {
         if (FT_Load_Char(face, i, FT_LOAD_RENDER) != FT_Err_Ok)
         {
@@ -80,7 +89,12 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
         if (!face->glyph->bitmap.buffer)
             continue;
 
-        glTexSubImage2D(GL_TEXTURE_2D, 0, offset, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+        glTexSubImage2D(GL_TEXTURE_2D, 0,
+                        m_characters.at(i).tex_coords.x,
+                        m_characters.at(i).tex_coords.y,
+                        face->glyph->bitmap.width,
+                        face->glyph->bitmap.rows,
+                        GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);

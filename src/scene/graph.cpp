@@ -36,6 +36,8 @@ void Graph::render()
 {
     m_vao.bind();
 
+    assert(!m_vertices.empty());
+
     glDrawArrays(GL_LINES, 0, 4);
     glDrawArrays(GL_POINTS, 4, m_vertices.size() / 2 - 4);
 

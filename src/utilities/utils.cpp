@@ -6,6 +6,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "utils.hpp"
 
+
 namespace utils
 {
     uint32_t gl_sizeof(uint32_t type)
@@ -52,7 +53,6 @@ namespace utils
 
         glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, data);
 
-        stbi_flip_vertically_on_write(true);
         stbi_write_png(std::string(file_name + ".png").c_str(), width, height, channels, data, 0);
 
         delete[] data;

@@ -69,3 +69,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         ${OPENGL_LIBRARIES}
         ${GLFW_DIR}/lib/libglfw3.a
         ${FREE_TYPE_DIR}/lib/libfreetype.a)
+
+target_link_options(${PROJECT_NAME} PRIVATE -static)

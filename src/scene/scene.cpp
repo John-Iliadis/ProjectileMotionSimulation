@@ -13,19 +13,6 @@ Scene::Scene(uint32_t width, uint32_t height)
     , m_height(height)
     , m_arial_48("../assets/fonts/arial.ttf", 48)
 {
-//    m_vertices = {
-//            0, 0,
-//            100, 200,
-//            200, 0
-//    };
-//
-//    m_vbo = VertexBufferStatic(m_vertices.data(), m_vertices.size());
-//
-//    VertexBufferLayout layout {
-//            {0, 2, GL_FLOAT, GL_FALSE}
-//    };
-//
-//    m_vao.attach_vertex_buffer(m_vbo, layout);
 }
 
 void Scene::update(double dt)
@@ -37,18 +24,10 @@ void Scene::render()
 {
     pre_render();
 
-
     m_graph_shader.bind();
     m_graph_shader.set_mat4("u_view_projection_matrix", m_camera.get_view_projection_matrix());
     m_graph.render();
     m_graph_shader.unbind();
-
-//    m_vao.bind();
-//    m_graph_shader.bind();
-//    m_graph_shader.set_mat4("u_view_projection_matrix", m_camera.get_view_projection_matrix());
-//    glDrawArrays(GL_TRIANGLES, 0, m_vertices.size() / 2);
-//    m_graph_shader.unbind();
-//    m_vao.unbind();
 
     post_render();
 }

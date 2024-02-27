@@ -37,10 +37,6 @@ private:
     uint32_t m_height;
 
     FontAtlas m_arial_48;
-
-    std::vector<float> m_vertices;
-    VertexArray m_vao;
-    VertexBufferStatic m_vbo;
 };
 
 
