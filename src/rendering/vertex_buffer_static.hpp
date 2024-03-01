@@ -6,9 +6,10 @@
 #define PROJECTILEMOTIONSIM_VERTEX_BUFFER_STATIC_HPP
 
 #include <glad/glad.h>
+#include "vertex_buffer.hpp"
 
 
-class VertexBufferStatic
+class VertexBufferStatic : public VertexBuffer
 {
 public:
     VertexBufferStatic();
@@ -21,8 +22,8 @@ public:
     VertexBufferStatic(const VertexBufferStatic&) = delete;
     VertexBufferStatic& operator=(const VertexBufferStatic&) = delete;
 
-    void bind() const;
-    void unbind() const;
+    void bind() const override;
+    void unbind() const override;
 
     uint32_t get_count() const;
 

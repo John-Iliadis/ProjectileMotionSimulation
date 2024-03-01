@@ -51,7 +51,13 @@ add_executable(${PROJECT_NAME}
         src/scene/graph.cpp
         src/scene/graph.hpp
         src/text_rendering/font_atlas.cpp
-        src/text_rendering/font_atlas.hpp)
+        src/text_rendering/font_atlas.hpp
+        src/text_rendering/text_renderer.cpp
+        src/text_rendering/text_renderer.hpp
+        src/text_rendering/text.hpp
+        src/rendering/vertex_buffer.hpp
+        src/rendering/vertex_buffer_dynamic.cpp
+        src/rendering/vertex_buffer_dynamic.hpp)
 
 find_package(OpenGL REQUIRED)
 

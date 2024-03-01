@@ -6,6 +6,7 @@
 #define PROJECTILEMOTIONSIM_VERTEX_ARRAY_HPP
 
 #include "vertex_buffer_static.hpp"
+#include "vertex_buffer_dynamic.hpp"
 #include "index_buffer_static.hpp"
 #include "vertex_buffer_layout.hpp"
 
@@ -25,16 +26,11 @@ public:
     void bind() const;
     void unbind() const;
 
-    void attach_vertex_buffer(const VertexBufferStatic& vbo, const VertexBufferLayout& layout);
+    void attach_vertex_buffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
     void attach_index_buffer(const IndexBufferStatic& ibo);
-
-    uint32_t get_vertex_count() const;
-    uint32_t get_index_count() const;
 
 private:
     uint32_t m_renderer_id;
-    uint32_t m_vertex_count;
-    uint32_t m_index_count;
 };
 
 

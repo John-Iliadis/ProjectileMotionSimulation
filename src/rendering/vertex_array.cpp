@@ -6,33 +6,19 @@
 
 VertexArray::VertexArray()
     : m_renderer_id()
-    , m_vertex_count()
-    , m_index_count()
 {
     glGenVertexArrays(1, &m_renderer_id);
 }
 
 VertexArray::~VertexArray()
 {
-    if (m_renderer_id)
-    {
-        glDeleteVertexArrays(1, &m_renderer_id);
-
-        m_renderer_id = 0;
-        m_vertex_count = 0;
-        m_index_count = 0;
-    }
+    glDeleteVertexArrays(1, &m_renderer_id);
 }
 
 VertexArray::VertexArray(VertexArray &&other) noexcept
 {
     m_renderer_id = other.m_renderer_id;
-    m_vertex_count = other.m_vertex_count;
-    m_index_count = other.m_index_count;
-
     other.m_renderer_id = 0;
-    other.m_vertex_count = 0;
-    other.m_index_count = 0;
 }
 
 VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
@@ -45,12 +31,7 @@ VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
         }
 
         m_renderer_id = other.m_renderer_id;
-        m_vertex_count = other.m_vertex_count;
-        m_index_count = other.m_index_count;
-
         other.m_renderer_id = 0;
-        other.m_vertex_count = 0;
-        other.m_index_count = 0;
     }
 
     return *this;
@@ -66,10 +47,8 @@ void VertexArray::unbind() const
     glBindVertexArray(0);
 }
 
-void VertexArray::attach_vertex_buffer(const VertexBufferStatic &vbo, const VertexBufferLayout &layout)
+void VertexArray::attach_vertex_buffer(const VertexBuffer& vbo, const VertexBufferLayout& layout)
 {
-    m_vertex_count = vbo.get_count();
-
     bind();
     vbo.bind();
 
@@ -88,21 +67,9 @@ void VertexArray::attach_vertex_buffer(const VertexBufferStatic &vbo, const Vert
 
 void VertexArray::attach_index_buffer(const IndexBufferStatic &ibo)
 {
-    m_index_count = ibo.get_count();
-
     bind();
     ibo.bind();
 
     unbind();
     ibo.unbind();
-}
-
-uint32_t VertexArray::get_vertex_count() const
-{
-    return m_vertex_count;
-}
-
-uint32_t VertexArray::get_index_count() const
-{
-    return m_index_count;
 }
