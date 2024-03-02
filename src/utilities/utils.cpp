@@ -58,4 +58,9 @@ namespace utils
         delete[] data;
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+
+    glm::vec2 normalize_texture_coords(const glm::vec2& texture_coords, const glm::vec2& texture_size)
+    {
+        return texture_coords / texture_size;
+    }
 }
