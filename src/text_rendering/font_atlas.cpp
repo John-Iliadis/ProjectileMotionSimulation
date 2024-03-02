@@ -10,7 +10,8 @@
 extern FT_Library ft_library;
 
 FontAtlas::FontAtlas()
-        : m_texture_id()
+    : m_texture_id()
+    , m_texture_size()
 {
 }
 
@@ -26,7 +27,6 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glm::uvec2 offset{};
-    glm::uvec2 texture_size{};
     uint32_t max_glyph_height{};
 
     constexpr uint32_t max_texture_width = 1024;
@@ -64,15 +64,15 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
             offset.x += character.size.x;
         }
 
-        texture_size.x = glm::max(texture_size.x, offset.x);
-        texture_size.y = glm::max(texture_size.y, offset.y + max_glyph_height);
+        m_texture_size.x = glm::max(m_texture_size.x, offset.x);
+        m_texture_size.y = glm::max(m_texture_size.y, offset.y + max_glyph_height);
 
         m_characters.insert(std::make_pair(i, std::move(character)));
     }
 
     glCreateTextures(GL_TEXTURE_2D, 1, &m_texture_id);
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, texture_size.x, texture_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_texture_size.x, m_texture_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -148,4 +148,9 @@ const FontAtlas::Character &FontAtlas::get_character(char c) const
     {
         throw std::runtime_error("FontAtlas::get_character: Character \"" + std::string(1, c) + "\" is missing from the map\n");
     }
+}
+
+const glm::uvec2 &FontAtlas::get_texture_size() const
+{
+    return m_texture_size;
 }

@@ -36,10 +36,12 @@ public:
 
     uint32_t get_texture_id() const;
     const Character& get_character(char c) const;
+    const glm::uvec2& get_texture_size() const;
 
 private:
     uint32_t m_texture_id;
     std::map<char, Character> m_characters;
+    glm::uvec2 m_texture_size;
 };
 
 
