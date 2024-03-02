@@ -65,7 +65,7 @@ void VertexArray::attach_vertex_buffer(const VertexBuffer& vbo, const VertexBuff
     vbo.unbind();
 }
 
-void VertexArray::attach_index_buffer(const IndexBufferStatic &ibo)
+void VertexArray::attach_index_buffer(const IndexBuffer &ibo)
 {
     bind();
     ibo.bind();

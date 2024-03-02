@@ -27,7 +27,7 @@ public:
     void unbind() const;
 
     void attach_vertex_buffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
-    void attach_index_buffer(const IndexBufferStatic& ibo);
+    void attach_index_buffer(const IndexBuffer& ibo);
 
 private:
     uint32_t m_renderer_id;

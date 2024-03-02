@@ -6,9 +6,10 @@
 #define PROJECTILEMOTIONSIM_INDEX_BUFFER_STATIC_HPP
 
 #include <glad/glad.h>
+#include "index_buffer.hpp"
 
 
-class IndexBufferStatic
+class IndexBufferStatic : public IndexBuffer
 {
 public:
     IndexBufferStatic();
@@ -21,8 +22,8 @@ public:
     IndexBufferStatic(const IndexBufferStatic&) = delete;
     IndexBufferStatic& operator=(const IndexBufferStatic&) = delete;
 
-    void bind() const;
-    void unbind() const;
+    void bind() const override;
+    void unbind() const override;
 
     uint32_t get_count() const;
 
