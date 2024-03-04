@@ -23,18 +23,18 @@ namespace TextRenderer
 {
     void init_renderer()
     {
-        static bool initialized = false;
+        static std::once_flag flag;
 
-        if (!initialized)
+        std::call_once(flag, [] ()
         {
             text_shader = std::make_unique<Shader>("../shaders/text.vert", "../shaders/text.frag");
             vao = std::make_unique<VertexArray>();
             vbo = std::make_unique<VertexBufferDynamic>(max_vertices * sizeof(TextVertex));
 
             VertexBufferLayout layout {
-                    {0, sizeof(TextVertex::position) / sizeof(float), GL_FLOAT, GL_FALSE},
-                    {1, sizeof(TextVertex::texture_coordinates) / sizeof(float), GL_FLOAT, GL_FALSE},
-                    {2, sizeof(TextVertex::color) / sizeof(float), GL_FLOAT, GL_FALSE},
+                    {0, 2, GL_FLOAT, GL_FALSE},
+                    {1, 2, GL_FLOAT, GL_FALSE},
+                    {2, 4, GL_FLOAT, GL_FALSE},
                     {3, 1, GL_FLOAT, GL_FALSE}
             };
 
@@ -57,9 +57,7 @@ namespace TextRenderer
             vao->attach_index_buffer(*ibo);
 
             // todo: clear indices
-
-            initialized = true;
-        }
+        });
     }
 
     void start_batch()
@@ -78,7 +76,6 @@ namespace TextRenderer
     {
         assert(text.font_atlas);
 
-        // todo: query for max texture slots
         if (!texture_unit_map.contains(text.font_atlas))
         {
             uint32_t texture_unit_index = texture_unit_map.size();
@@ -119,6 +116,12 @@ namespace TextRenderer
                 vertex.texture_unit = texture_unit_map.at(text.font_atlas);
                 vertex.texture_coordinates = utils::normalize_texture_coords(vertex.texture_coordinates, text.font_atlas->get_texture_size());
             });
+
+            // todo: append data to vertices
+            // todo: check that normalized coordinates are correct
+            // todo: implement finish render
+            // todo: implement flush function
+            // todo: query for max texture slots
 
             index_count += 6;
             x_offset += character_details.advance;

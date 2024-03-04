@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <array>
 #include <algorithm>
+#include <mutex>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "../rendering/shader.hpp"
