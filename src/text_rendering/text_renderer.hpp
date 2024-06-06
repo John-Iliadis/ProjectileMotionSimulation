@@ -21,12 +21,12 @@
 #include "text.hpp"
 
 
+// A text batch renderer
 namespace TextRenderer
 {
     void init_renderer();
-    void start_batch();
-    void render_batch();
-    void render_text(const Text& text);
+    void draw_text(const Text& text);
+    void render();
 }
 
 

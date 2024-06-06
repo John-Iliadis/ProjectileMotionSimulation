@@ -55,7 +55,7 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
         throw std::runtime_error("WindowBase::WindowBase: Failed to initialize FreeType\n");
     }
 
-    TextRenderer::init_renderer();
+    // TextRenderer::init_renderer(); todo: uncomment this
 }
 
 WindowBase::~WindowBase()

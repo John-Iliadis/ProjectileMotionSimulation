@@ -8,6 +8,7 @@
 static constexpr uint32_t max_quads = 20000;
 static constexpr uint32_t max_vertices = max_quads * 4;
 static constexpr uint32_t max_indices = max_quads * 6;
+static constexpr uint32_t max_textures = 32; // todo query for max textures
 
 static std::unique_ptr<Shader> text_shader;
 static std::unique_ptr<VertexArray> vao;
@@ -39,6 +40,7 @@ namespace TextRenderer
             };
 
             // todo: check capacity
+            // setup quads indexes
             indices.reserve(max_indices);
             for (uint32_t i = 0, offset = 0; i < max_indices; i += 6, offset += 4)
             {
@@ -56,24 +58,27 @@ namespace TextRenderer
             vao->attach_vertex_buffer(*vbo, layout);
             vao->attach_index_buffer(*ibo);
 
-            // todo: clear indices
+            // todo: delete index vector
         });
     }
 
-    void start_batch()
+    static void clear_batch()
     {
         text_vertices.clear();
         texture_unit_map.clear();
         index_count = 0;
     }
 
-    void render_batch()
+    void render()
     {
-
+        // render here
+        clear_batch();
     }
 
-    void render_text(const Text& text)
+    void draw_text(const Text& text)
     {
+        // todo: check if current batch is full
+
         assert(text.font_atlas);
 
         if (!texture_unit_map.contains(text.font_atlas))
@@ -85,7 +90,7 @@ namespace TextRenderer
 
         uint32_t x_offset{};
 
-        for (auto c = text.text.begin(); c != text.text.end(); ++c)
+        for (auto c = text.string.begin(); c != text.string.end(); ++c)
         {
             const FontAtlas::Character& character_details = text.font_atlas->get_character(*c);
 
@@ -113,7 +118,7 @@ namespace TextRenderer
 
             std::for_each(quad.begin(), quad.end(), [&text] (auto& vertex) {
                 vertex.color = text.color;
-                vertex.texture_unit = texture_unit_map.at(text.font_atlas);
+                vertex.texture_unit_index = texture_unit_map.at(text.font_atlas);
                 vertex.texture_coordinates = utils::normalize_texture_coords(vertex.texture_coordinates, text.font_atlas->get_texture_size());
             });
 

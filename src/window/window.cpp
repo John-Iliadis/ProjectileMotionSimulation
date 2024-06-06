@@ -16,9 +16,10 @@ Window::Window(uint32_t width, uint32_t height)
     glfwSetKeyCallback(m_window, key_callback);
 }
 
+// main loop of application
 void Window::run()
 {
-    double last_time = 0;
+    double last_time {};
 
     while (!glfwWindowShouldClose(m_window))
     {
@@ -33,6 +34,7 @@ void Window::run()
     }
 }
 
+// callback that handles key events
 void Window::key_callback(GLFWwindow *p_window, int key, int scancode, int action, int mods)
 {
     auto window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(p_window));
@@ -60,6 +62,7 @@ void Window::render()
     glfwSwapBuffers(m_window);
 }
 
+// fps counter
 void Window::update_frame_counter(double dt)
 {
     fps_update_time += dt;

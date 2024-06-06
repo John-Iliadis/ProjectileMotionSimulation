@@ -11,10 +11,12 @@
 #include "glad/glad.h"
 #include "glm/glm.hpp"
 
-
+// Loads FT character glyphs into a texture used for text rendering.
 class FontAtlas
 {
 public:
+
+    // This struct stores the information for each character glyph in the texture font atlas
     struct Character
     {
         glm::uvec2 size;

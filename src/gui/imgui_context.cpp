@@ -5,6 +5,7 @@
 #include "imgui_context.hpp"
 
 
+// imgui initialization
 IMGUI_Context::IMGUI_Context(GLFWwindow *window)
 {
     ImGui::CreateContext();
@@ -25,6 +26,7 @@ IMGUI_Context::~IMGUI_Context()
     ImGui::DestroyContext();
 }
 
+// imgui new frame
 void IMGUI_Context::begin()
 {
     ImGui_ImplOpenGL3_NewFrame();
@@ -33,6 +35,7 @@ void IMGUI_Context::begin()
     ImGui::DockSpaceOverViewport();
 }
 
+// imgui render
 void IMGUI_Context::end()
 {
     ImGui::Render();

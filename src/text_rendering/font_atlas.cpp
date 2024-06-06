@@ -11,11 +11,15 @@ extern FT_Library ft_library;
 
 FontAtlas::FontAtlas()
     : m_texture_id()
+    , m_characters()
     , m_texture_size()
 {
 }
 
 FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
+    : m_texture_id()
+    , m_characters()
+    , m_texture_size()
 {
     FT_Face face;
     if (FT_New_Face(ft_library, file_name.c_str(), 0, &face) != FT_Err_Ok)
@@ -23,10 +27,10 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
         throw std::runtime_error("Font::Font: Failed to load font: " + file_name + '\n');
     }
 
-    FT_Set_Pixel_Sizes(face, 0, font_size);
+    FT_Set_Pixel_Sizes(face, 0, font_size); // set glyph size
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    glm::uvec2 offset{};
+    glm::uvec2 offset{}; // the offset of the current glyph in the texture
     uint32_t max_glyph_height{};
 
     constexpr uint32_t max_texture_width = 1024;
@@ -35,6 +39,7 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
 
     for (uint32_t i = char_start; i < char_end; ++i)
     {
+        // load a glyph
         if (FT_Load_Char(face, i, FT_LOAD_RENDER) != FT_Err_Ok)
         {
             throw std::runtime_error("Font::load_from_file: Failed to load glyph \"" + std::string(1, i) + "\"\n");
@@ -46,6 +51,8 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
         character.bearing = {face->glyph->bitmap_left, face->glyph->bitmap_top};
         character.advance = face->glyph->advance.x << 6;
 
+        // place the glyph in the current row of the texture, if the texture width remains lower than the max texture
+        // width. Else, place glyph on a new row below.
         if (offset.x + character.size.x <= max_texture_width)
         {
             character.tex_coords = offset;
@@ -67,9 +74,12 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
         m_texture_size.x = glm::max(m_texture_size.x, offset.x);
         m_texture_size.y = glm::max(m_texture_size.y, offset.y + max_glyph_height);
 
-        m_characters.insert(std::make_pair(i, std::move(character)));
+        auto result = m_characters.insert(std::make_pair(i, std::move(character)));
+
+        assert(result.second);
     }
 
+    // the following process creates the texture font atlas object
     glCreateTextures(GL_TEXTURE_2D, 1, &m_texture_id);
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_texture_size.x, m_texture_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
@@ -111,10 +121,11 @@ FontAtlas::FontAtlas(FontAtlas &&other) noexcept
 {
     m_texture_id = other.m_texture_id;
     m_characters = std::move(other.m_characters);
+    m_texture_size = std::move(other.m_texture_size);
     other.m_texture_id = 0;
 }
 
-FontAtlas &FontAtlas::operator=(FontAtlas &&other) noexcept
+FontAtlas& FontAtlas::operator=(FontAtlas &&other) noexcept
 {
     if (this != &other)
     {
@@ -125,6 +136,7 @@ FontAtlas &FontAtlas::operator=(FontAtlas &&other) noexcept
 
         m_texture_id = other.m_texture_id;
         m_characters = std::move(other.m_characters);
+        m_texture_size = std::move(other.m_texture_size);
         other.m_texture_id = 0;
     }
 
@@ -136,7 +148,7 @@ uint32_t FontAtlas::get_texture_id() const
     return m_texture_id;
 }
 
-const FontAtlas::Character &FontAtlas::get_character(char c) const
+const FontAtlas::Character& FontAtlas::get_character(char c) const
 {
     auto itr = m_characters.find(c);
 
@@ -150,7 +162,7 @@ const FontAtlas::Character &FontAtlas::get_character(char c) const
     }
 }
 
-const glm::uvec2 &FontAtlas::get_texture_size() const
+const glm::uvec2& FontAtlas::get_texture_size() const
 {
     return m_texture_size;
 }

@@ -11,7 +11,7 @@ Scene::Scene(uint32_t width, uint32_t height)
     , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
     , m_width(width)
     , m_height(height)
-    , m_arial_48("../assets/fonts/arial.ttf", 48)
+    //, m_arial_48("../assets/fonts/arial.ttf", 48)
 {
 }
 
@@ -32,10 +32,14 @@ void Scene::render()
     post_render();
 }
 
+// The pre-render function:
+// - handles resizing
+// - binds the framebuffer
+// - clears the color buffer of the framebuffer
 void Scene::pre_render()
 {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0)); // no window padding
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0); // no border
     ImGui::Begin("Scene");
 
     // todo: check if window is docked
@@ -62,6 +66,9 @@ void Scene::pre_render()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+// The post render:
+// - transfers the aa-framebuffers data to a texture
+// - draws the texture to the 'scene' imgui window
 void Scene::post_render()
 {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo.get_framebuffer_id());

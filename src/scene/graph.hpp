@@ -14,6 +14,7 @@
 #include "../rendering/shader.hpp"
 
 
+// The graph of the projectile motion simulation
 class Graph
 {
 public:

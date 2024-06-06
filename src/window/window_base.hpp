@@ -10,7 +10,8 @@
 #include <glm/glm.hpp>
 #include "../utilities/gl_debug_message_callback.hpp"
 
-
+// Base class of Window.
+// Initializes glfw, opengl, glad, FT, and the text batch renderer.
 class WindowBase
 {
 public:

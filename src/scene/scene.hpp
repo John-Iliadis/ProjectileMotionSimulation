@@ -13,6 +13,8 @@
 #include "graph.hpp"
 
 
+// The scene consists of the window where the simulation happens.
+// Everything is rendered to a framebuffer, which is then rendered to the 'scene' imgui dockable window.
 class Scene
 {
 public:
@@ -27,7 +29,7 @@ private:
     void resize_scene(uint32_t width, uint32_t height);
 
 private:
-    FrameBuffer m_fbo;
+    FrameBuffer m_fbo; // anti-aliased framebuffer
     FrameBuffer m_intermediate_fbo;
     OrthographicCamera m_camera;
     Shader m_graph_shader;
@@ -36,7 +38,7 @@ private:
     uint32_t m_width;
     uint32_t m_height;
 
-    FontAtlas m_arial_48;
+    //FontAtlas m_arial_48;
 };
 
 
