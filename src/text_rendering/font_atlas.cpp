@@ -49,7 +49,7 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
 
         character.size = {face->glyph->bitmap.width, face->glyph->bitmap.rows};
         character.bearing = {face->glyph->bitmap_left, face->glyph->bitmap_top};
-        character.advance = face->glyph->advance.x << 6;
+        character.advance = face->glyph->advance.x >> 6;
 
         // place the glyph in the current row of the texture, if the texture width remains lower than the max texture
         // width. Else, place glyph on a new row below.
