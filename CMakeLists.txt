@@ -60,7 +60,8 @@ add_executable(${PROJECT_NAME}
         src/rendering/vertex_buffer_dynamic.hpp
         src/rendering/index_buffer_dynamic.cpp
         src/rendering/index_buffer_dynamic.hpp
-        src/rendering/index_buffer.hpp)
+        src/rendering/index_buffer.hpp
+        src/text_rendering/text_rendering_includes.hpp)
 
 find_package(OpenGL REQUIRED)
 
