@@ -22,7 +22,7 @@ public:
     VertexBufferDynamic(const VertexBufferDynamic&) = delete;
     VertexBufferDynamic& operator=(const VertexBufferDynamic&) = delete;
 
-    void set_data(const void* data, uint32_t count);
+    void set_data(const void* data, uint32_t size_of_memory_block);
 
     void bind() const override;
     void unbind() const override;

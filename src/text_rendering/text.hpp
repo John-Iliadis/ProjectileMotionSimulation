@@ -14,18 +14,10 @@ class FontAtlas;
 // A text object used for rendering
 struct Text
 {
-    const FontAtlas* font_atlas = nullptr;
+    const FontAtlas* font_atlas;
     std::string string;
     glm::vec2 position;
-    glm::vec4 color;
-
-    Text()
-            : font_atlas()
-            , string()
-            , position()
-            , color(1)
-    {
-    }
+    glm::vec4 color = glm::vec4(1);
 };
 
 
@@ -33,16 +25,8 @@ struct TextVertex
 {
     glm::vec2 position;
     glm::vec2 texture_coordinates;
-    glm::vec4 color;
+    glm::vec4 color = glm::vec4(1);
     uint32_t texture_unit_index;  // specifies the texture font atlas
-
-    TextVertex()
-        : position()
-        , texture_coordinates()
-        , color(1)
-        , texture_unit_index()
-    {
-    }
 };
 
 

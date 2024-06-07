@@ -23,7 +23,7 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
-    glm::vec<2, int> window_size {
+    glm::ivec2 window_size {
         static_cast<int>(width),
         static_cast<int>(height)
     };
@@ -55,7 +55,7 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
         throw std::runtime_error("WindowBase::WindowBase: Failed to initialize FreeType\n");
     }
 
-    // TextRenderer::init_renderer(); todo: uncomment this
+     TextRenderer::init_renderer();
 }
 
 WindowBase::~WindowBase()

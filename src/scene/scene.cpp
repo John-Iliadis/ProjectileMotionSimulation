@@ -11,7 +11,8 @@ Scene::Scene(uint32_t width, uint32_t height)
     , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
     , m_width(width)
     , m_height(height)
-    //, m_arial_48("../assets/fonts/arial.ttf", 48)
+    , m_arial_48("../assets/fonts/arial.ttf", 48)
+    , text(&m_arial_48, "hello world", {0, 0})
 {
 }
 
@@ -23,12 +24,16 @@ void Scene::update(double dt)
 void Scene::render()
 {
     pre_render();
+    TextRenderer::pre_render(m_camera);
 
     m_graph_shader.bind();
     m_graph_shader.set_mat4("u_view_projection_matrix", m_camera.get_view_projection_matrix());
     m_graph.render();
     m_graph_shader.unbind();
 
+    TextRenderer::draw_text(text);
+
+    TextRenderer::render();
     post_render();
 }
 
@@ -43,18 +48,15 @@ void Scene::pre_render()
     ImGui::Begin("Scene");
 
     // todo: check if window is docked
-    glm::uvec2 window_size {
-            static_cast<uint32_t>(ImGui::GetContentRegionAvail().x),
-            static_cast<uint32_t>(ImGui::GetContentRegionAvail().y)
+    glm::uvec2 window_size
+    {
+        static_cast<uint32_t>(ImGui::GetContentRegionAvail().x),
+        static_cast<uint32_t>(ImGui::GetContentRegionAvail().y)
     };
 
     if (m_width != window_size.x || m_height != window_size.y)
     {
-        if (ImGui::IsWindowDocked())
-        {
-            resize_scene(window_size.x, window_size.y);
-        }
-        else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+        if (ImGui::IsWindowDocked() || ImGui::IsMouseReleased(ImGuiMouseButton_Left))
         {
             resize_scene(window_size.x, window_size.y);
         }

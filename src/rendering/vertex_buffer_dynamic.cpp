@@ -45,10 +45,10 @@ VertexBufferDynamic &VertexBufferDynamic::operator=(VertexBufferDynamic &&other)
     return *this;
 }
 
-void VertexBufferDynamic::set_data(const void *data, uint32_t count)
+void VertexBufferDynamic::set_data(const void *data, uint32_t size_of_memory_block)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(float), data);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size_of_memory_block, data);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

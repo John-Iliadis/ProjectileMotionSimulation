@@ -17,6 +17,7 @@
 #include "../rendering/vertex_array.hpp"
 #include "../rendering/vertex_buffer_dynamic.hpp"
 #include "../rendering/index_buffer_dynamic.hpp"
+#include "../camera/orthographic_camera.hpp"
 #include "font_atlas.hpp"
 #include "text.hpp"
 
@@ -25,8 +26,9 @@
 namespace TextRenderer
 {
     void init_renderer();
-    void draw_text(const Text& text);
+    void pre_render(const OrthographicCamera& camera);
     void render();
+    void draw_text(const Text& text);
 }
 
 

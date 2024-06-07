@@ -9,7 +9,7 @@
 #include <imgui/imgui.h>
 #include "../rendering/rendering_includes.hpp"
 #include "../camera/orthographic_camera.hpp"
-#include "../text_rendering/font_atlas.hpp"
+#include "../text_rendering/text_rendering_includes.hpp"
 #include "graph.hpp"
 
 
@@ -38,7 +38,8 @@ private:
     uint32_t m_width;
     uint32_t m_height;
 
-    //FontAtlas m_arial_48;
+    Text text;
+    FontAtlas m_arial_48;
 };
 
 
