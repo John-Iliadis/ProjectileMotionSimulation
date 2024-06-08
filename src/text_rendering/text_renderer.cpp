@@ -52,9 +52,9 @@ namespace TextRenderer
                 indices.push_back(offset + 1);
                 indices.push_back(offset + 2);
 
+                indices.push_back(offset);
                 indices.push_back(offset + 2);
                 indices.push_back(offset + 3);
-                indices.push_back(offset);
             }
 
             ibo = std::make_unique<IndexBufferStatic>(indices.data(), indices.size());
@@ -117,10 +117,11 @@ namespace TextRenderer
         vao->unbind();
         text_shader->unbind();
 
-        // clear all data
+        // clear all rendered data
         clear_batch();
     }
 
+    // todo: don't apply kerning to first character of word
     void draw_text(const Text& text)
     {
         assert(text.font_atlas);
@@ -152,6 +153,7 @@ namespace TextRenderer
             if (c == ' ')
             {
                 x_offset += character_details.advance;
+                continue;
             }
 
             glm::vec2 kerned_position
@@ -160,14 +162,7 @@ namespace TextRenderer
                 text.position.y - (character_details.size.y - character_details.bearing.y)
             };
 
-            // The origin of the texture coordinates in the font atlas is top left. TheOpenGL origin for textures
-            // is bottom left, so they have to be converted. The following vec2 stores the bottom left texture
-            // coordinates of the current character.
-            glm::uvec2 texture_coordinates
-            {
-                character_details.tex_coords.x,
-                text.font_atlas->get_texture_size().y - (character_details.tex_coords.y + character_details.size.y)
-            };
+            const glm::uvec2& texture_coordinates = character_details.tex_coords;
 
             // the index of each vertex inside the vertices vector
             const size_t v1 = vertices.size();
