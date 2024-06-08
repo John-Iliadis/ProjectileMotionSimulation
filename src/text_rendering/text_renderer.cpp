@@ -58,10 +58,10 @@ namespace TextRenderer
             }
 
             ibo = std::make_unique<IndexBufferStatic>(indices.data(), indices.size());
+            std::vector<uint32_t>().swap(indices); // delete indices memory since they're copied in vram
 
             vao->attach_vertex_buffer(*vbo, layout);
             vao->attach_index_buffer(*ibo);
-            // todo: delete index vector
 
             // query for max number of textures
             glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURES);
@@ -144,7 +144,6 @@ namespace TextRenderer
         uint32_t x_offset{};
 
         // create the vertices for every character in the string
-        bool first_character = true;
         for (const auto c : text.string)
         {
             const FontAtlas::Character& character_details = text.font_atlas->get_character(c);
@@ -153,25 +152,14 @@ namespace TextRenderer
             if (c == ' ')
             {
                 x_offset += character_details.advance;
-                first_character = true;
                 continue;
             }
 
             glm::vec2 position
             {
-                text.position.x + x_offset,
+                text.position.x + x_offset + character_details.bearing.x,
                 text.position.y - (character_details.size.y - character_details.bearing.y)
             };
-
-            // apply kerning if not first character of word
-            if (first_character)
-            {
-                first_character = false;
-            }
-            else
-            {
-                position.x += character_details.bearing.x;
-            }
 
             const glm::uvec2& texture_coordinates = character_details.tex_coords;
 
