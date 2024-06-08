@@ -121,7 +121,6 @@ namespace TextRenderer
         clear_batch();
     }
 
-    // todo: don't apply kerning to first character of word
     void draw_text(const Text& text)
     {
         assert(text.font_atlas);
@@ -145,6 +144,7 @@ namespace TextRenderer
         uint32_t x_offset{};
 
         // create the vertices for every character in the string
+        bool first_character = true;
         for (const auto c : text.string)
         {
             const FontAtlas::Character& character_details = text.font_atlas->get_character(c);
@@ -153,14 +153,25 @@ namespace TextRenderer
             if (c == ' ')
             {
                 x_offset += character_details.advance;
+                first_character = true;
                 continue;
             }
 
-            glm::vec2 kerned_position
+            glm::vec2 position
             {
-                text.position.x + x_offset + character_details.bearing.x,
+                text.position.x + x_offset,
                 text.position.y - (character_details.size.y - character_details.bearing.y)
             };
+
+            // apply kerning if not first character of word
+            if (first_character)
+            {
+                first_character = false;
+            }
+            else
+            {
+                position.x += character_details.bearing.x;
+            }
 
             const glm::uvec2& texture_coordinates = character_details.tex_coords;
 
@@ -174,10 +185,10 @@ namespace TextRenderer
             vertices.insert(vertices.end(), 4, TextVertex());
 
             // positions of quad vertices
-            vertices.at(v1).position = kerned_position; // top left
-            vertices.at(v2).position = {kerned_position.x + character_details.size.x, kerned_position.y}; // top right
-            vertices.at(v3).position = {kerned_position.x + character_details.size.x, kerned_position.y + character_details.size.y}; // bottom right
-            vertices.at(v4).position = {kerned_position.x, kerned_position.y + character_details.size.y}; // bottom left
+            vertices.at(v1).position = position; // top left
+            vertices.at(v2).position = {position.x + character_details.size.x, position.y}; // top right
+            vertices.at(v3).position = {position.x + character_details.size.x, position.y + character_details.size.y}; // bottom right
+            vertices.at(v4).position = {position.x, position.y + character_details.size.y}; // bottom left
 
             // texture coordinates of quad vertices
             vertices.at(v1).texture_coordinates = {texture_coordinates.x, texture_coordinates.y + character_details.size.y}; // top left
