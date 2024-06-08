@@ -4,8 +4,6 @@
 
 #include "scene.hpp"
 
-#include "../utilities/utils.hpp"
-
 
 Scene::Scene(uint32_t width, uint32_t height)
     : m_fbo(GL_TEXTURE_2D_MULTISAMPLE, width, height)
@@ -14,7 +12,7 @@ Scene::Scene(uint32_t width, uint32_t height)
     , m_width(width)
     , m_height(height)
     , m_arial_48("../assets/fonts/arial.ttf", 48)
-    , text(&m_arial_48, "HELLO WORLD", {0, 0})
+    , text(&m_arial_48, "Hi my name is Slim Shady!", {100, 100})
 {
 }
 

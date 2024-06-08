@@ -28,6 +28,9 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     }
 
     FT_Set_Pixel_Sizes(face, 0, font_size); // set glyph size
+
+    int previous_alignment;
+    glGetIntegerv(GL_UNPACK_ALIGNMENT, &previous_alignment);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glm::uvec2 offset{}; // the offset of the current glyph in the texture
@@ -108,6 +111,7 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, previous_alignment);
 
     FT_Done_Face(face);
 }
