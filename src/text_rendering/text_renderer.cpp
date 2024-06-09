@@ -93,6 +93,73 @@ namespace TextRenderer
         }
     }
 
+    static glm::vec2 get_text_dimensions(const Text& text)
+    {
+        // Text dimensions
+        // - width: The sum of advances of all characters
+        // - height: The max height above the baseline
+        uint32_t total_width = 0;
+        uint32_t max_height = 0;
+
+        for (char c: text.string)
+        {
+            const FontAtlas::Character& character_details = text.font_atlas->get_character(c);
+
+            total_width += character_details.advance;
+            max_height = glm::max(max_height, static_cast<uint32_t>(character_details.bearing.y));
+        }
+
+        return
+        {
+            static_cast<float>(total_width),
+            static_cast<float>(max_height)
+        };
+    }
+
+    static glm::vec2 calculate_text_position(const Text& text)
+    {
+        glm::vec2 pos = text.position;
+        glm::vec2 text_dimensions = get_text_dimensions(text);
+
+        switch (text.origin)
+        {
+            case TextOrigin::BOTTOM_LEFT:
+                break;
+            case TextOrigin::BOTTOM_CENTER:
+                pos.x -= text_dimensions.x / 2.f;
+                break;
+            case TextOrigin::BOTTOM_RIGHT:
+                pos.x -= text_dimensions.x;
+                break;
+            case TextOrigin::TOP_LEFT:
+                pos.y -= text_dimensions.y;
+                break;
+            case TextOrigin::TOP_CENTER:
+                pos.x -= text_dimensions.x / 2.f;
+                pos.y -= text_dimensions.y;
+                break;
+            case TextOrigin::TOP_RIGHT:
+                pos.x -= text_dimensions.x;
+                pos.y -= text_dimensions.y;
+                break;
+            case TextOrigin::CENTER_LEFT:
+                pos.y -= text_dimensions.y / 2.f;
+                break;
+            case TextOrigin::CENTER:
+                pos.x -= text_dimensions.x / 2.f;
+                pos.y -= text_dimensions.y / 2.f;
+                break;
+            case TextOrigin::CENTER_RIGHT:
+                pos.x -= text_dimensions.x;
+                pos.y -= text_dimensions.y / 2.f;
+                break;
+            default:
+                assert(false);
+        }
+
+        return pos;
+    }
+
     void pre_render(const OrthographicCamera& camera)
     {
         view_projection_matrix = &camera.get_view_projection_matrix();
@@ -142,6 +209,7 @@ namespace TextRenderer
         }
 
         uint32_t x_offset{};
+        glm::vec2 text_origin = calculate_text_position(text);
 
         // create the vertices for every character in the string
         for (const auto c : text.string)
@@ -157,8 +225,8 @@ namespace TextRenderer
 
             glm::vec2 position
             {
-                text.position.x + x_offset + character_details.bearing.x,
-                text.position.y - (character_details.size.y - character_details.bearing.y)
+                text_origin.x + x_offset + character_details.bearing.x,
+                text_origin.y - (character_details.size.y - character_details.bearing.y)
             };
 
             const glm::uvec2& texture_coordinates = character_details.tex_coords;
@@ -179,10 +247,10 @@ namespace TextRenderer
             vertices.at(v4).position = {position.x, position.y + character_details.size.y}; // bottom left
 
             // texture coordinates of quad vertices
-            vertices.at(v1).texture_coordinates = {texture_coordinates.x, texture_coordinates.y + character_details.size.y}; // top left
-            vertices.at(v2).texture_coordinates = texture_coordinates + character_details.size; // top right
-            vertices.at(v3).texture_coordinates = {texture_coordinates.x + character_details.size.x, texture_coordinates.y}; // bottom right
-            vertices.at(v4).texture_coordinates = texture_coordinates; // bottom left
+            vertices.at(v1).texture_coordinates = {texture_coordinates.x, texture_coordinates.y + character_details.size.y};
+            vertices.at(v2).texture_coordinates = texture_coordinates + character_details.size;
+            vertices.at(v3).texture_coordinates = {texture_coordinates.x + character_details.size.x, texture_coordinates.y};
+            vertices.at(v4).texture_coordinates = texture_coordinates;
 
             // for each vertex, assign color, texture, and normalize texture coordinates.
             std::for_each(vertices.end() - 4, vertices.end(), [&text] (auto& vertex)

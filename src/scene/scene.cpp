@@ -11,8 +11,6 @@ Scene::Scene(uint32_t width, uint32_t height)
     , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
     , m_width(width)
     , m_height(height)
-    , m_arial_48("../assets/fonts/arial.ttf", 48)
-    , text(&m_arial_48, "Hi my name is Slim Shady!", {100, 100})
 {
 }
 
@@ -30,8 +28,6 @@ void Scene::render()
     m_graph_shader.set_mat4("u_view_projection_matrix", m_camera.get_view_projection_matrix());
     m_graph.render();
     m_graph_shader.unbind();
-
-    TextRenderer::draw_text(text);
 
     TextRenderer::render();
     post_render();

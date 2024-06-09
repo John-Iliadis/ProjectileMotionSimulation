@@ -11,12 +11,26 @@
 
 class FontAtlas;
 
+enum class TextOrigin
+{
+    BOTTOM_LEFT,
+    BOTTOM_CENTER,
+    BOTTOM_RIGHT,
+    TOP_LEFT,
+    TOP_CENTER,
+    TOP_RIGHT,
+    CENTER_LEFT,
+    CENTER,
+    CENTER_RIGHT
+};
+
 // A text object used for rendering
 struct Text
 {
     const FontAtlas* font_atlas;
     std::string string;
     glm::vec2 position;
+    TextOrigin origin = TextOrigin::BOTTOM_LEFT;
     glm::vec4 color = glm::vec4(1);
 };
 

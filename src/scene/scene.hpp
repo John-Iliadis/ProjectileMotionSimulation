@@ -37,9 +37,6 @@ private:
 
     uint32_t m_width;
     uint32_t m_height;
-
-    Text text;
-    FontAtlas m_arial_48;
 };
 
 

@@ -22,7 +22,7 @@ public:
         glm::uvec2 size;
         glm::ivec2 bearing;
         glm::uvec2 tex_coords;
-        uint32_t advance;
+        int64_t advance;
     };
 
 public:
