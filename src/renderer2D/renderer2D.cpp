@@ -159,7 +159,7 @@ namespace renderer2D
             point_line_shader->set_mat4("u_view_proj", *view_projection_matrix);
             points_vao->bind();
 
-            glDrawArrays(GL_POINTS, 0, point_vertices.size()); // todo: check this
+            glDrawArrays(GL_POINTS, 0, point_vertices.size());
 
             points_vao->unbind();
             point_line_shader->unbind();
@@ -175,7 +175,7 @@ namespace renderer2D
             point_line_shader->set_mat4("u_view_proj", *view_projection_matrix);
             lines_vao->bind();
 
-            glDrawArrays(GL_LINES, 0, line_vertices.size()); // todo: check this
+            glDrawArrays(GL_LINES, 0, line_vertices.size());
 
             lines_vao->unbind();
             point_line_shader->unbind();

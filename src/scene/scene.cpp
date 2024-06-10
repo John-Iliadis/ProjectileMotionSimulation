@@ -26,9 +26,6 @@ void Scene::render()
     m_graph.set_view_proj(m_camera.get_view_projection_matrix());
     m_graph.render();
 
-    renderer2D::draw_point(200, 200);
-    renderer2D::draw_line(0, 0, m_width, m_height);
-
     renderer2D::render();
     post_render();
 }
