@@ -332,10 +332,10 @@ static glm::vec2 get_text_dimensions(const Text& text)
     }
 
     return
-            {
-                    static_cast<float>(total_width),
-                    static_cast<float>(max_height)
-            };
+    {
+        static_cast<float>(total_width),
+        static_cast<float>(max_height)
+    };
 }
 
 static glm::vec2 calculate_text_position(const Text& text)
