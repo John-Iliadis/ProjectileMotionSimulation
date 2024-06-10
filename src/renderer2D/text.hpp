@@ -35,13 +35,4 @@ struct Text
 };
 
 
-struct TextVertex
-{
-    glm::vec2 position;
-    glm::vec2 texture_coordinates;
-    glm::vec4 color = glm::vec4(1);
-    uint32_t texture_unit_index;  // specifies the texture font atlas
-};
-
-
 #endif //PROJECTILEMOTIONSIM_TEXT_HPP

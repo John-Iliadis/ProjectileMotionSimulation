@@ -5,7 +5,7 @@
 #include "window_base.hpp"
 #include "ft2build.h"
 #include FT_FREETYPE_H
-#include "../text_rendering/text_renderer.hpp"
+#include "../renderer2D/renderer2D.hpp"
 
 
 FT_Library ft_library;
@@ -55,7 +55,7 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
         throw std::runtime_error("WindowBase::WindowBase: Failed to initialize FreeType\n");
     }
 
-     TextRenderer::init_renderer();
+     renderer2D::init_renderer();
 }
 
 WindowBase::~WindowBase()

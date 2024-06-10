@@ -9,7 +9,7 @@
 #include <imgui/imgui.h>
 #include "../rendering/rendering_includes.hpp"
 #include "../camera/orthographic_camera.hpp"
-#include "../text_rendering/text_rendering_includes.hpp"
+#include "../renderer2D/renderer2D_includes.hpp"
 #include "graph.hpp"
 
 
@@ -32,7 +32,6 @@ private:
     FrameBuffer m_fbo; // anti-aliased framebuffer
     FrameBuffer m_intermediate_fbo;
     OrthographicCamera m_camera;
-    Shader m_graph_shader;
     Graph m_graph;
 
     uint32_t m_width;

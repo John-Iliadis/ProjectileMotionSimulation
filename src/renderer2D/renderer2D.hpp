@@ -2,12 +2,11 @@
 // Created by Gianni on 2/03/2024.
 //
 
-#ifndef PROJECTILEMOTIONSIM_TEXT_RENDERER_HPP
-#define PROJECTILEMOTIONSIM_TEXT_RENDERER_HPP
+#ifndef PROJECTILEMOTIONSIM_RENDERER2D_HPP
+#define PROJECTILEMOTIONSIM_RENDERER2D_HPP
 
 #include <string>
 #include <memory>
-#include <unordered_map>
 #include <array>
 #include <algorithm>
 #include <mutex>
@@ -22,14 +21,17 @@
 #include "text.hpp"
 
 
-// A text batch renderer
-namespace TextRenderer
+// batch renderer
+namespace renderer2D
 {
     void init_renderer();
     void pre_render(const OrthographicCamera& camera);
     void render();
+
+    void draw_point(float x, float y, const glm::vec4& color = glm::vec4(1));
+    void draw_line(float x1, float y1, float x2, float y2, const glm::vec4& color = glm::vec4(1));
     void draw_text(const Text& text);
 }
 
 
-#endif //PROJECTILEMOTIONSIM_TEXT_RENDERER_HPP
+#endif //PROJECTILEMOTIONSIM_RENDERER2D_HPP

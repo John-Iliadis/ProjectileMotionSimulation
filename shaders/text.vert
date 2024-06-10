@@ -11,7 +11,6 @@ flat out uint v_texture_unit;
 
 uniform mat4 u_view_projection;
 
-
 void main()
 {
     gl_Position = u_view_projection * vec4(position, 0, 1);

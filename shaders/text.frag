@@ -8,7 +8,6 @@ out vec4 color;
 
 uniform sampler2D u_sampler[32];
 
-
 void main()
 {
     vec4 glyph_sample = vec4(1, 1, 1, texture(u_sampler[v_texture_unit], v_tex_coords).r);

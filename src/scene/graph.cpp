@@ -11,7 +11,6 @@ Graph::Graph()
     , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
     , m_view_proj()
 {
-    glPointSize(5);
 }
 
 void Graph::create(float width, float height)

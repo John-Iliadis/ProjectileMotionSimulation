@@ -8,7 +8,6 @@
 Scene::Scene(uint32_t width, uint32_t height)
     : m_fbo(GL_TEXTURE_2D_MULTISAMPLE, width, height)
     , m_intermediate_fbo(GL_TEXTURE_2D, width, height)
-    , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
     , m_width(width)
     , m_height(height)
 {
@@ -22,14 +21,15 @@ void Scene::update(double dt)
 void Scene::render()
 {
     pre_render();
-    TextRenderer::pre_render(m_camera);
+    renderer2D::pre_render(m_camera);
 
-    m_graph_shader.bind();
-    m_graph_shader.set_mat4("u_view_projection_matrix", m_camera.get_view_projection_matrix());
+    m_graph.set_view_proj(m_camera.get_view_projection_matrix());
     m_graph.render();
-    m_graph_shader.unbind();
 
-    TextRenderer::render();
+    renderer2D::draw_point(200, 200);
+    renderer2D::draw_line(0, 0, m_width, m_height);
+
+    renderer2D::render();
     post_render();
 }
 
