@@ -22,6 +22,8 @@ public:
 
     void create(float width, float height);
     void render();
+    void update(double dt);
+    void set_view_proj(const glm::mat4 &view_proj);
 
 private:
     void create_axes(float width, float height, float origin_offset);
@@ -31,6 +33,8 @@ private:
     std::vector<float> m_vertices;
     VertexArray m_vao;
     VertexBufferStatic m_vbo;
+    Shader m_graph_shader;
+    const glm::mat4* m_view_proj;
 
     float m_width;
     float m_height;

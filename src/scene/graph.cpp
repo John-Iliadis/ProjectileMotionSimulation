@@ -8,7 +8,10 @@
 Graph::Graph()
     : m_width()
     , m_height()
+    , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
+    , m_view_proj()
 {
+    glPointSize(5);
 }
 
 void Graph::create(float width, float height)
@@ -28,20 +31,28 @@ void Graph::create(float width, float height)
     VertexBufferLayout layout {{0, 2, GL_FLOAT, GL_FALSE}};
 
     m_vao.attach_vertex_buffer(m_vbo, layout);
+}
 
-    glPointSize(5);
+void Graph::update(double dt)
+{
+}
+
+void Graph::set_view_proj(const glm::mat4 &view_proj)
+{
+    m_view_proj = &view_proj;
 }
 
 void Graph::render()
 {
+    m_graph_shader.bind();
+    m_graph_shader.set_mat4("u_view_proj", *m_view_proj);
     m_vao.bind();
-
-    assert(!m_vertices.empty());
 
     glDrawArrays(GL_LINES, 0, 4);
     glDrawArrays(GL_POINTS, 4, m_vertices.size() / 2 - 4);
 
     m_vao.unbind();
+    m_graph_shader.unbind();
 }
 
 void Graph::create_axes(float width, float height, float origin_offset)

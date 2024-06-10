@@ -50,18 +50,18 @@ add_executable(${PROJECT_NAME}
         src/camera/orthographic_camera.hpp
         src/scene/graph.cpp
         src/scene/graph.hpp
-        src/text_rendering/font_atlas.cpp
-        src/text_rendering/font_atlas.hpp
-        src/text_rendering/text_renderer.cpp
-        src/text_rendering/text_renderer.hpp
-        src/text_rendering/text.hpp
+        src/renderer2D/font_atlas.cpp
+        src/renderer2D/font_atlas.hpp
+        src/renderer2D/renderer2D.cpp
+        src/renderer2D/renderer2D.hpp
+        src/renderer2D/text.hpp
         src/rendering/vertex_buffer.hpp
         src/rendering/vertex_buffer_dynamic.cpp
         src/rendering/vertex_buffer_dynamic.hpp
         src/rendering/index_buffer_dynamic.cpp
         src/rendering/index_buffer_dynamic.hpp
         src/rendering/index_buffer.hpp
-        src/text_rendering/text_rendering_includes.hpp)
+        src/renderer2D/renderer2D_includes.hpp)
 
 find_package(OpenGL REQUIRED)
 
