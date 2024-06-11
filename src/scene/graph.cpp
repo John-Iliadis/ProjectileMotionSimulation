@@ -8,8 +8,7 @@
 Graph::Graph()
     : m_width()
     , m_height()
-    , m_graph_shader("../shaders/graph.vert", "../shaders/graph.frag")
-    , m_view_proj()
+    , m_graph_origin()
 {
 }
 
@@ -18,108 +17,74 @@ void Graph::create(float width, float height)
     m_width = width;
     m_height = height;
 
-    float origin_offset = 0.2 * height;
+    m_graph_origin = glm::vec2(0.2 * m_height);
 
-    m_vertices.clear();
+    m_points.clear();
 
-    create_axes(width, height, origin_offset);
-    create_points(width, height, origin_offset);
-
-    m_vbo = VertexBufferStatic(m_vertices.data(), m_vertices.size());
-
-    VertexBufferLayout layout {{0, 2, GL_FLOAT, GL_FALSE}};
-
-    m_vao.attach_vertex_buffer(m_vbo, layout);
+    create_axes();
+    create_points();
 }
 
 void Graph::update(double dt)
 {
 }
 
-void Graph::set_view_proj(const glm::mat4 &view_proj)
-{
-    m_view_proj = &view_proj;
-}
-
 void Graph::render()
 {
-    m_graph_shader.bind();
-    m_graph_shader.set_mat4("u_view_proj", *m_view_proj);
-    m_vao.bind();
+    // draw axes
+    renderer2D::draw_line(m_axes[0], m_axes[1]);
+    renderer2D::draw_line(m_axes[2], m_axes[3]);
 
-    glDrawArrays(GL_LINES, 0, 4);
-    glDrawArrays(GL_POINTS, 4, m_vertices.size() / 2 - 4);
-
-    m_vao.unbind();
-    m_graph_shader.unbind();
+    // draw points
+    for (const auto& point : m_points)
+        renderer2D::draw_point(point);
 }
 
-void Graph::create_axes(float width, float height, float origin_offset)
+void Graph::create_axes()
 {
-    std::array<float, 4> x_axis {
-            0, origin_offset,
-            width, origin_offset
-    };
+    // x-axis
+    m_axes[0] = {0, m_graph_origin.y};
+    m_axes[1] = {m_width, m_graph_origin.y};
 
-    std::array<float, 4> y_axis {
-            origin_offset, 0,
-            origin_offset, height
-    };
-
-    m_vertices.insert(m_vertices.begin(), x_axis.begin(), x_axis.end());
-    m_vertices.insert(m_vertices.begin(), y_axis.begin(), y_axis.end());
+    // y-axis
+    m_axes[2] = {m_graph_origin.x, 0};
+    m_axes[3] = {m_graph_origin.x, m_height};
 }
 
-void Graph::create_points(float width, float height, float origin_offset)
+void Graph::create_points()
 {
-    float m_point_interval = height / 10;
+    float m_point_interval = m_height / 10;
 
-    float pos_x = origin_offset;
-    float neg_x = origin_offset - m_point_interval;
-    float pos_y = origin_offset + m_point_interval;
-    float neg_y = origin_offset - m_point_interval;
+    float pos_x = m_graph_origin.x;
+    float neg_x = m_graph_origin.x - m_point_interval;
+    float pos_y = m_graph_origin.y + m_point_interval;
+    float neg_y = m_graph_origin.y - m_point_interval;
 
-    while (pos_x < width)
+    // positive x-axis
+    while (pos_x < m_width)
     {
-        float x = pos_x;
-        float y = origin_offset;
-
-        m_vertices.push_back(x);
-        m_vertices.push_back(y);
-
+        m_points.emplace_back(pos_x, m_graph_origin.y);
         pos_x += m_point_interval;
     }
 
+    // negative x-axis
     while (neg_x > 0)
     {
-        float x = neg_x;
-        float y = origin_offset;
-
-        m_vertices.push_back(x);
-        m_vertices.push_back(y);
-
+        m_points.emplace_back(neg_x, m_graph_origin.y);
         neg_x -= m_point_interval;
     }
 
-    while (pos_y < height)
+    // positive y-axis
+    while (pos_y < m_height)
     {
-        float x = origin_offset;
-        float y = pos_y;
-
-        m_vertices.push_back(x);
-        m_vertices.push_back(y);
-
+        m_points.emplace_back(m_graph_origin.x, pos_y);
         pos_y += m_point_interval;
     }
 
+    // negative y-axis
     while (neg_y > 0)
     {
-        float x = origin_offset;
-        float y = neg_y;
-
-        m_vertices.push_back(x);
-        m_vertices.push_back(y);
-
+        m_points.emplace_back(m_graph_origin.x, neg_y);
         neg_y -= m_point_interval;
     }
 }

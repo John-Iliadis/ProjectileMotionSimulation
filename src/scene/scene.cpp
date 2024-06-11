@@ -23,7 +23,6 @@ void Scene::render()
     pre_render();
     renderer2D::pre_render(m_camera);
 
-    m_graph.set_view_proj(m_camera.get_view_projection_matrix());
     m_graph.render();
 
     renderer2D::render();

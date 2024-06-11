@@ -8,10 +8,7 @@
 #include <array>
 #include <vector>
 #include <glad/glad.h>
-#include "../rendering/vertex_array.hpp"
-#include "../rendering/vertex_buffer_static.hpp"
-#include "../rendering/vertex_buffer_layout.hpp"
-#include "../rendering/shader.hpp"
+#include "../renderer2D/renderer2D_includes.hpp"
 
 
 // The graph of the projectile motion simulation
@@ -23,18 +20,15 @@ public:
     void create(float width, float height);
     void render();
     void update(double dt);
-    void set_view_proj(const glm::mat4 &view_proj);
 
 private:
-    void create_axes(float width, float height, float origin_offset);
-    void create_points(float width, float height, float origin_offset);
+    void create_axes();
+    void create_points();
 
 private:
-    std::vector<float> m_vertices;
-    VertexArray m_vao;
-    VertexBufferStatic m_vbo;
-    Shader m_graph_shader;
-    const glm::mat4* m_view_proj;
+    std::array<glm::vec2, 4> m_axes;
+    std::vector<glm::vec2> m_points;
+    glm::vec2 m_graph_origin;
 
     float m_width;
     float m_height;
