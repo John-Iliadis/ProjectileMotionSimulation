@@ -47,7 +47,7 @@ void Window::key_callback(GLFWwindow *p_window, int key, int scancode, int actio
 
 void Window::update(double dt)
 {
-
+    m_scene.update(dt);
 }
 
 void Window::render()
