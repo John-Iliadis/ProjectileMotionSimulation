@@ -222,6 +222,11 @@ namespace renderer2D
         point_vertices.push_back({{x, y}, color});
     }
 
+    void draw_point(const glm::vec2& pos, const glm::vec4& color)
+    {
+        draw_point(pos.x, pos.y, color);
+    }
+
     void draw_line(float x1, float y1, float x2, float y2, const glm::vec4& color)
     {
         if (line_vertices.size() + 2 > MAX_VERTICES)
@@ -229,6 +234,11 @@ namespace renderer2D
 
         line_vertices.push_back({{x1, y1}, color});
         line_vertices.push_back({{x2, y2}, color});
+    }
+
+    void draw_line(const glm::vec2& point_1, const glm::vec2& point_2, const glm::vec4& color)
+    {
+        draw_line(point_1.x, point_1.y, point_2.x, point_2.y, color);
     }
 
     void draw_text(const Text& text)

@@ -29,7 +29,11 @@ namespace renderer2D
     void render();
 
     void draw_point(float x, float y, const glm::vec4& color = glm::vec4(1));
+    void draw_point(const glm::vec2& pos, const glm::vec4& color = glm::vec4(1));
+
     void draw_line(float x1, float y1, float x2, float y2, const glm::vec4& color = glm::vec4(1));
+    void draw_line(const glm::vec2& point_1, const glm::vec2& point_2, const glm::vec4& color = glm::vec4(1));
+
     void draw_text(const Text& text);
 }
 
