@@ -14,6 +14,7 @@
 struct Point
 {
     glm::vec2 pos;
+    int value;
     Text text;
 };
 
@@ -31,25 +32,35 @@ public:
 
     void create(float width, float height);
     void render();
-    void update(double dt);
 
     void zoom_in();
     void zoom_out();
 
     float get_meter_as_pixels() const;
+    uint8_t get_zoom_level() const;
+    uint8_t get_max_zoom_level() const;
 
 private:
     void create_axes();
     void create_points();
+    void create_pos_x_axis_points();
+    void create_neg_x_axis_points();
+    void create_pos_y_axis_points();
+    void create_neg_y_axis_points();
+    Point create_point(float x, float y, int value);
 
 private:
     std::array<glm::vec2, 4> m_axes;
     std::vector<Point> m_points;
-    glm::vec2 m_graph_origin;
     FontAtlas m_arial;
 
     float m_width;
     float m_height;
+
+    glm::vec2 m_graph_origin;
+    float m_point_interval;
+    uint32_t m_value_interval;
+
     uint8_t m_zoom_level;
 };
 
