@@ -9,11 +9,11 @@ out vec2 v_tex_coords;
 out vec4 v_color;
 flat out uint v_texture_unit;
 
-uniform mat4 u_view_projection;
+uniform mat4 u_view_proj;
 
 void main()
 {
-    gl_Position = u_view_projection * vec4(position, 0, 1);
+    gl_Position = u_view_proj * vec4(position, 0, 1);
 
     v_tex_coords = tex_coords;
     v_color = color;

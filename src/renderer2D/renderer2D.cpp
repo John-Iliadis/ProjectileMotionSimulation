@@ -189,7 +189,7 @@ namespace renderer2D
             text_vbo->set_data(text_vertices.data(), text_vertices.size() * sizeof(TextVertex));
             bind_textures();
             text_shader->bind();
-            text_shader->set_mat4("u_view_projection", *view_projection_matrix);
+            text_shader->set_mat4("u_view_proj", *view_projection_matrix);
             text_vao->bind();
 
             glDrawElements(GL_TRIANGLES, text_index_count, GL_UNSIGNED_INT, nullptr);
@@ -299,16 +299,16 @@ namespace renderer2D
             text_vertices.insert(text_vertices.end(), 4, TextVertex());
 
             // positions of quad vertices
-            text_vertices.at(v1).position = position; // top left
-            text_vertices.at(v2).position = {position.x + character_details.size.x, position.y}; // top right
-            text_vertices.at(v3).position = {position.x + character_details.size.x, position.y + character_details.size.y}; // bottom right
-            text_vertices.at(v4).position = {position.x, position.y + character_details.size.y}; // bottom left
+            text_vertices.at(v1).position = {position.x, position.y}; // bottom left
+            text_vertices.at(v2).position = {position.x, position.y + character_details.size.y}; // top left
+            text_vertices.at(v3).position = {position.x + character_details.size.x, position.y + character_details.size.y}; // top right
+            text_vertices.at(v4).position = {position.x + character_details.size.x, position.y}; // bottom right
 
-            // texture coordinates of quad vertices
+            // texture coordinates of quad vertices. The y-axis is flipped
             text_vertices.at(v1).texture_coordinates = {texture_coordinates.x, texture_coordinates.y + character_details.size.y};
-            text_vertices.at(v2).texture_coordinates = texture_coordinates + character_details.size;
+            text_vertices.at(v2).texture_coordinates = {texture_coordinates.x, texture_coordinates.y};
             text_vertices.at(v3).texture_coordinates = {texture_coordinates.x + character_details.size.x, texture_coordinates.y};
-            text_vertices.at(v4).texture_coordinates = texture_coordinates;
+            text_vertices.at(v4).texture_coordinates = {texture_coordinates.x + character_details.size.x, texture_coordinates.y + character_details.size.y};
 
             // for each vertex, assign color, texture, and normalize texture coordinates.
             std::for_each(text_vertices.end() - 4, text_vertices.end(), [&text, texture_unit_index] (auto& vertex)

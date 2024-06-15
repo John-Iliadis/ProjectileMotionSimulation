@@ -123,12 +123,12 @@ void Graph::create_pos_x_axis_points()
 
     while (x_pos < m_width)
     {
-        Point point = create_point(x_pos, y_pos, point_value);
-        m_points.push_back(std::move(point));
+        m_points.push_back(create_point(x_pos, y_pos, point_value));
         x_pos += m_point_interval;
         point_value += m_value_interval;
     }
 }
+
 void Graph::create_neg_x_axis_points()
 {
     float x_pos = m_graph_origin.x - m_point_interval;
@@ -137,8 +137,7 @@ void Graph::create_neg_x_axis_points()
 
     while (x_pos > 0)
     {
-        Point point = create_point(x_pos, y_pos, point_value);
-        m_points.push_back(std::move(point));
+        m_points.push_back(create_point(x_pos, y_pos, point_value));
         x_pos -= m_point_interval;
         point_value -= m_value_interval;
     }
@@ -152,8 +151,7 @@ void Graph::create_pos_y_axis_points()
 
     while (y_pos < m_height)
     {
-        Point point = create_point(x_pos, y_pos, point_value);
-        m_points.push_back(std::move(point));
+        m_points.push_back(create_point(x_pos, y_pos, point_value));
         y_pos += m_point_interval;
         point_value += m_value_interval;
     }
@@ -167,8 +165,7 @@ void Graph::create_neg_y_axis_points()
 
     while (y_pos > 0)
     {
-        Point point = create_point(x_pos, y_pos, point_value);
-        m_points.push_back(std::move(point));
+        m_points.push_back(create_point(x_pos, y_pos, point_value));
         y_pos -= m_point_interval;
         point_value -= m_value_interval;
     }

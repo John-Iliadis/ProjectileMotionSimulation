@@ -6,6 +6,7 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
+#include <iostream>
 
 extern FT_Library ft_library;
 
@@ -36,11 +37,11 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     glm::uvec2 offset{}; // the offset of the current glyph in the texture
     uint32_t max_glyph_height{};
 
-    constexpr uint32_t max_texture_width = 1024;
-    constexpr uint32_t char_start = 32;
-    constexpr uint32_t char_end = 127;
+    constexpr uint32_t MAX_TEXTURE_WIDTH = 1024;
+    constexpr uint8_t CHAR_START = 32;
+    constexpr uint8_t CHAR_END = 127;
 
-    for (uint32_t i = char_start; i < char_end; ++i)
+    for (uint8_t i = CHAR_START; i < CHAR_END; ++i)
     {
         // load a glyph
         if (FT_Load_Char(face, i, FT_LOAD_RENDER) != FT_Err_Ok)
@@ -54,12 +55,14 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
         character.bearing = {face->glyph->bitmap_left, face->glyph->bitmap_top};
         character.advance = face->glyph->advance.x >> 6;
 
-        // place the glyph in the current row of the texture, if the texture width remains lower than the max texture
+        assert(character.size.x <= MAX_TEXTURE_WIDTH);
+
+        // place the glyph in the current row of the texture if the texture width remains lower than the max texture
         // width. Else, place glyph on a new row below.
-        if (offset.x + character.size.x <= max_texture_width)
+        if (offset.x + character.size.x <= MAX_TEXTURE_WIDTH)
         {
             character.tex_coords = offset;
-            offset.x += character.size.x;
+            offset.x += character.size.x + 2; // there is a one pixel margin between glyphs
 
             max_glyph_height = glm::max(max_glyph_height, character.size.y);
         }
@@ -87,12 +90,12 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_texture_size.x, m_texture_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    for (uint32_t i = char_start; i < char_end; ++i)
+    for (uint8_t i = CHAR_START; i < CHAR_END; ++i)
     {
         if (FT_Load_Char(face, i, FT_LOAD_RENDER) != FT_Err_Ok)
         {
