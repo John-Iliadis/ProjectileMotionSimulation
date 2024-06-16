@@ -53,7 +53,6 @@ static glm::vec2 get_text_dimensions(const Text& text);
 static glm::vec2 calculate_text_position(const Text& text);
 
 
-
 namespace renderer2D
 {
     void init_renderer()
@@ -270,24 +269,24 @@ namespace renderer2D
         glm::vec2 text_origin = calculate_text_position(text);
 
         // create the vertices for every character in the string
-        for (const auto c : text.string)
+        for (const char c : text.string)
         {
-            const FontAtlas::Character& character_details = text.font_atlas->get_character(c);
+            const FontAtlas::Character& char_details = text.font_atlas->get_character(c);
 
             // don't create vertices for space. Just advance the offset
             if (c == ' ')
             {
-                x_offset += character_details.advance;
+                x_offset += char_details.advance;
                 continue;
             }
 
-            glm::vec2 position
+            glm::vec2 pos
             {
-                text_origin.x + x_offset + character_details.bearing.x,
-                text_origin.y - (character_details.size.y - character_details.bearing.y)
+                text_origin.x + static_cast<float>(x_offset) + static_cast<float>(char_details.bearing.x),
+                text_origin.y - (static_cast<float>(char_details.size.y) - static_cast<float>(char_details.bearing.y))
             };
 
-            const glm::uvec2& texture_coordinates = character_details.tex_coords;
+            const glm::uvec2& tex_coords = char_details.tex_coords;
 
             // the index of each vertex inside the vertices vector
             const size_t v1 = text_vertices.size();
@@ -299,16 +298,16 @@ namespace renderer2D
             text_vertices.insert(text_vertices.end(), 4, TextVertex());
 
             // positions of quad vertices
-            text_vertices.at(v1).position = {position.x, position.y}; // bottom left
-            text_vertices.at(v2).position = {position.x, position.y + character_details.size.y}; // top left
-            text_vertices.at(v3).position = {position.x + character_details.size.x, position.y + character_details.size.y}; // top right
-            text_vertices.at(v4).position = {position.x + character_details.size.x, position.y}; // bottom right
+            text_vertices.at(v1).position = {pos.x, pos.y}; // bottom left
+            text_vertices.at(v2).position = {pos.x, pos.y + char_details.size.y}; // top left
+            text_vertices.at(v3).position = {pos.x + char_details.size.x, pos.y + char_details.size.y}; // top right
+            text_vertices.at(v4).position = {pos.x + char_details.size.x, pos.y}; // bottom right
 
             // texture coordinates of quad vertices. The y-axis is flipped
-            text_vertices.at(v1).texture_coordinates = {texture_coordinates.x, texture_coordinates.y + character_details.size.y};
-            text_vertices.at(v2).texture_coordinates = {texture_coordinates.x, texture_coordinates.y};
-            text_vertices.at(v3).texture_coordinates = {texture_coordinates.x + character_details.size.x, texture_coordinates.y};
-            text_vertices.at(v4).texture_coordinates = {texture_coordinates.x + character_details.size.x, texture_coordinates.y + character_details.size.y};
+            text_vertices.at(v1).texture_coordinates = {tex_coords.x, tex_coords.y + char_details.size.y};
+            text_vertices.at(v2).texture_coordinates = {tex_coords.x, tex_coords.y};
+            text_vertices.at(v3).texture_coordinates = {tex_coords.x + char_details.size.x, tex_coords.y};
+            text_vertices.at(v4).texture_coordinates = {tex_coords.x + char_details.size.x, tex_coords.y + char_details.size.y};
 
             // for each vertex, assign color, texture, and normalize texture coordinates.
             std::for_each(text_vertices.end() - 4, text_vertices.end(), [&text, texture_unit_index] (auto& vertex)
@@ -319,7 +318,7 @@ namespace renderer2D
             });
 
             text_index_count += 6;
-            x_offset += character_details.advance;
+            x_offset += char_details.advance;
         }
     }
 }
