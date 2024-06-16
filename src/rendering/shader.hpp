@@ -36,6 +36,8 @@ public:
     void set_float2(const std::string& name, const glm::vec2& vec2);
     void set_float3(const std::string& name, float v0, float v1, float v2);
     void set_float3(const std::string& name, const glm::vec3& vec3);
+    void set_float4(const std::string& name, float v0, float v1, float v2, float v3);
+    void set_float4(const std::string& name, const glm::vec4& vec4);
     void set_mat4(const std::string& name, const glm::mat4& matrix);
 
     static std::string parse_shader(const std::string& file_name);

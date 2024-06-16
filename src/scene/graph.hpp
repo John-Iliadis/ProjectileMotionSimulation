@@ -39,6 +39,7 @@ public:
     float get_meter_as_pixels() const;
     uint8_t get_zoom_level() const;
     uint8_t get_max_zoom_level() const;
+    const glm::vec2& get_origin() const;
 
 private:
     void create_axes();

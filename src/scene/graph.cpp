@@ -3,6 +3,7 @@
 //
 
 #include "graph.hpp"
+#include <imgui/imgui.h>
 
 
 static constexpr std::array<float, 10> scale {10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000};
@@ -34,6 +35,20 @@ void Graph::create(float width, float height)
 
 void Graph::render()
 {
+    ImGui::Begin("graph scale");
+
+    if (ImGui::Button("Zoom in"))
+    {
+        zoom_in();
+    }
+
+    if (ImGui::Button("Zoom out"))
+    {
+        zoom_out();
+    }
+
+    ImGui::End();
+
     // draw axes
     renderer2D::draw_line(m_axes[0], m_axes[1]);
     renderer2D::draw_line(m_axes[2], m_axes[3]);
@@ -202,4 +217,9 @@ Point Graph::create_point(float x, float y, int value)
     }
 
     return point;
+}
+
+const glm::vec2 &Graph::get_origin() const
+{
+    return m_graph_origin;
 }

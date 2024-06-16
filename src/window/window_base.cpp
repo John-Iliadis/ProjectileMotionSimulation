@@ -23,7 +23,8 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
-    glm::ivec2 window_size {
+    glm::ivec2 window_size
+    {
         static_cast<int>(width),
         static_cast<int>(height)
     };

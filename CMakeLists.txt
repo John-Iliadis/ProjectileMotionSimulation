@@ -23,6 +23,8 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/utilities/gl_debug_message_callback.cpp
         src/utilities/gl_debug_message_callback.hpp
+        src/utilities/utils.cpp
+        src/utilities/utils.hpp
         src/window/window.cpp
         src/window/window.hpp
         src/window/window_base.cpp
@@ -35,19 +37,23 @@ add_executable(${PROJECT_NAME}
         src/rendering/index_buffer_static.hpp
         src/rendering/vertex_buffer_layout.cpp
         src/rendering/vertex_buffer_layout.hpp
-        src/utilities/utils.cpp
-        src/utilities/utils.hpp
         src/rendering/vertex_array.cpp
         src/rendering/vertex_array.hpp
         src/rendering/frame_buffer.cpp
         src/rendering/frame_buffer.hpp
         src/rendering/rendering_includes.hpp
+        src/rendering/vertex_buffer_dynamic.cpp
+        src/rendering/vertex_buffer_dynamic.hpp
+        src/rendering/index_buffer_dynamic.cpp
+        src/rendering/index_buffer_dynamic.hpp
+        src/rendering/vertex_buffer.hpp
+        src/rendering/index_buffer.hpp
         src/gui/imgui_context.cpp
         src/gui/imgui_context.hpp
-        src/scene/scene.cpp
-        src/scene/scene.hpp
         src/camera/orthographic_camera.cpp
         src/camera/orthographic_camera.hpp
+        src/scene/scene.cpp
+        src/scene/scene.hpp
         src/scene/graph.cpp
         src/scene/graph.hpp
         src/renderer2D/font_atlas.cpp
@@ -55,13 +61,9 @@ add_executable(${PROJECT_NAME}
         src/renderer2D/renderer2D.cpp
         src/renderer2D/renderer2D.hpp
         src/renderer2D/text.hpp
-        src/rendering/vertex_buffer.hpp
-        src/rendering/vertex_buffer_dynamic.cpp
-        src/rendering/vertex_buffer_dynamic.hpp
-        src/rendering/index_buffer_dynamic.cpp
-        src/rendering/index_buffer_dynamic.hpp
-        src/rendering/index_buffer.hpp
-        src/renderer2D/renderer2D_includes.hpp)
+        src/renderer2D/renderer2D_includes.hpp
+        src/scene/vector.cpp
+        src/scene/vector.hpp)
 
 find_package(OpenGL REQUIRED)
 
