@@ -38,6 +38,7 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     uint32_t max_glyph_height{};
 
     constexpr uint32_t MAX_TEXTURE_WIDTH = 1024;
+    constexpr uint32_t GLYPH_PADDING = 4;
     constexpr uint8_t CHAR_START = 32;
     constexpr uint8_t CHAR_END = 127;
 
@@ -62,14 +63,14 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
         if (offset.x + character.size.x <= MAX_TEXTURE_WIDTH)
         {
             character.tex_coords = offset;
-            offset.x += character.size.x + 2; // there is a one pixel margin between glyphs
+            offset.x += character.size.x + GLYPH_PADDING; // there is a one pixel margin between glyphs
 
             max_glyph_height = glm::max(max_glyph_height, character.size.y);
         }
         else
         {
             offset.x = 0;
-            offset.y += max_glyph_height;
+            offset.y += max_glyph_height + GLYPH_PADDING;
 
             max_glyph_height = character.size.y;
 
@@ -90,8 +91,8 @@ FontAtlas::FontAtlas(const std::string &file_name, uint32_t font_size)
     glBindTexture(GL_TEXTURE_2D, m_texture_id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_texture_size.x, m_texture_size.y, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
