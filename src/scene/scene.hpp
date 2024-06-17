@@ -26,6 +26,8 @@ public:
 private:
     void pre_render();
     void post_render();
+    void control_panel();
+    void info_panel();
     void resize_scene(uint32_t width, uint32_t height);
 
 private:
