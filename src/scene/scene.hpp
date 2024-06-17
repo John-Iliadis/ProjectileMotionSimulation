@@ -11,6 +11,7 @@
 #include "../camera/orthographic_camera.hpp"
 #include "../renderer2D/renderer2D_includes.hpp"
 #include "graph.hpp"
+#include "simulation.hpp"
 
 
 // The scene consists of the window where the simulation happens.
@@ -26,15 +27,14 @@ public:
 private:
     void pre_render();
     void post_render();
-    void control_panel();
-    void info_panel();
     void resize_scene(uint32_t width, uint32_t height);
 
 private:
     FrameBuffer m_fbo; // anti-aliased framebuffer
     FrameBuffer m_intermediate_fbo;
     OrthographicCamera m_camera;
-    Graph m_graph;
+    std::shared_ptr<Graph> m_graph;
+    Simulation m_simulation;
 
     uint32_t m_width;
     uint32_t m_height;

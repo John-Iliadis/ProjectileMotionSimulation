@@ -10,6 +10,14 @@ Vector::Vector()
 {
 }
 
+Vector::Vector(const glm::vec2 &pos, float velocity, float angle, float meter_as_pixels, const glm::vec4 &color)
+        : Vector(pos,
+                 {velocity * glm::cos(glm::radians(angle)), velocity * glm::sin(glm::radians(angle))},
+                 meter_as_pixels,
+                 color)
+{
+}
+
 Vector::Vector(const glm::vec2 &pos, const glm::vec2 &vel, float meter_as_pixels, const glm::vec4 &color)
     : m_position(pos)
     , m_velocity(vel)

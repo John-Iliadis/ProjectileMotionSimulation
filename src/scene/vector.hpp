@@ -15,6 +15,7 @@ class Vector
 public:
     Vector();
     Vector(const glm::vec2& pos, const glm::vec2& vel, float meter_as_pixels, const glm::vec4& color = glm::vec4(1));
+    Vector(const glm::vec2& pos, float velocity, float angle /* degrees */, float meter_as_pixels, const glm::vec4& color = glm::vec4(1));
 
     void render();
     void set_position(const glm::vec2& position);

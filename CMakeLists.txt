@@ -48,8 +48,8 @@ add_executable(${PROJECT_NAME}
         src/rendering/index_buffer_dynamic.hpp
         src/rendering/vertex_buffer.hpp
         src/rendering/index_buffer.hpp
-        src/gui/imgui_context.cpp
-        src/gui/imgui_context.hpp
+        src/imgui/imgui_context.cpp
+        src/imgui/imgui_context.hpp
         src/camera/orthographic_camera.cpp
         src/camera/orthographic_camera.hpp
         src/scene/scene.cpp
@@ -63,7 +63,9 @@ add_executable(${PROJECT_NAME}
         src/renderer2D/text.hpp
         src/renderer2D/renderer2D_includes.hpp
         src/scene/vector.cpp
-        src/scene/vector.hpp)
+        src/scene/vector.hpp
+        src/scene/simulation.cpp
+        src/scene/simulation.hpp)
 
 find_package(OpenGL REQUIRED)
 
@@ -82,4 +84,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         ${GLFW_DIR}/lib/libglfw3.a
         ${FREE_TYPE_DIR}/lib/libfreetype.a)
 
-target_link_options(${PROJECT_NAME} PRIVATE -static)
+target_link_options(${PROJECT_NAME} PRIVATE -static "-Wl,--allow-multiple-definition")
