@@ -16,7 +16,7 @@ IMGUI_Context::IMGUI_Context(GLFWwindow *window)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 460");
+    ImGui_ImplOpenGL3_Init("#version 460 core");
 }
 
 IMGUI_Context::~IMGUI_Context()

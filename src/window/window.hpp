@@ -6,7 +6,7 @@
 #define PROJECTILEMOTIONSIM_WINDOW_HPP
 
 #include "../rendering/rendering_includes.hpp"
-#include "../gui/imgui_context.hpp"
+#include "../imgui/imgui_context.hpp"
 #include "../scene/scene.hpp"
 #include "window_base.hpp"
 
