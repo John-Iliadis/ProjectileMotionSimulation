@@ -5,6 +5,8 @@
 #include "renderer2D.hpp"
 
 
+using namespace renderer2D::constants;
+
 struct PointVertex
 {
     glm::vec2 position;
@@ -19,11 +21,6 @@ struct TextVertex
     glm::vec4 color;
 };
 
-
-static constexpr uint32_t MAX_QUADS = 20000;
-static constexpr uint32_t MAX_VERTICES = MAX_QUADS * 4;
-static constexpr uint32_t MAX_INDICES = MAX_QUADS * 6;
-static int MAX_TEXTURES;
 
 // point buffers
 static std::unique_ptr<VertexArray> points_vao;
@@ -44,10 +41,10 @@ static std::vector<TextVertex> text_vertices;
 static uint32_t text_index_count = 0;
 
 // general
+static int max_textures;
 static std::unique_ptr<IndexBufferStatic> quads_ibo;
 static std::vector<uint32_t> quad_indices;
 static std::vector<uint32_t> textures;
-static const glm::mat4* view_projection_matrix = nullptr;
 
 static glm::vec2 get_text_dimensions(const Text& text);
 static glm::vec2 calculate_text_position(const Text& text);
@@ -61,13 +58,13 @@ namespace renderer2D
 
         std::call_once(flag, [] ()
         {
-            point_vertices.reserve(MAX_VERTICES);
-            line_vertices.reserve(MAX_VERTICES);
-            text_vertices.reserve(MAX_VERTICES);
-            quad_indices.reserve(MAX_INDICES);
+            point_vertices.reserve(MAX_POINT_VERTICES);
+            line_vertices.reserve(MAX_LINE_VERTICES);
+            text_vertices.reserve(MAX_QUAD_VERTICES);
+            quad_indices.reserve(MAX_QUAD_INDICES);
 
             // setup quads indexes
-            for (uint32_t i = 0, offset = 0; i < MAX_INDICES; i += 6, offset += 4)
+            for (uint32_t i = 0, offset = 0; i < MAX_QUAD_INDICES; i += QUAD_INDEX_COUNT, offset += QUAD_VERTEX_COUNT)
             {
                 quad_indices.push_back(offset);
                 quad_indices.push_back(offset + 1);
@@ -85,7 +82,7 @@ namespace renderer2D
             glPointSize(5);
             point_line_shader = std::make_unique<Shader>("../shaders/point_line.vert", "../shaders/point_line.frag");
             points_vao = std::make_unique<VertexArray>();
-            points_vbo = std::make_unique<VertexBufferDynamic>(MAX_VERTICES * sizeof(PointVertex));
+            points_vbo = std::make_unique<VertexBufferDynamic>(MAX_POINT_VERTICES * sizeof(PointVertex));
 
             VertexBufferLayout point_line_vertex_layout
             {
@@ -97,13 +94,13 @@ namespace renderer2D
 
             // lines setup
             lines_vao = std::make_unique<VertexArray>();
-            lines_vbo = std::make_unique<VertexBufferDynamic>(MAX_VERTICES * sizeof(PointVertex));
+            lines_vbo = std::make_unique<VertexBufferDynamic>(MAX_LINE_VERTICES * sizeof(PointVertex));
             lines_vao->attach_vertex_buffer(*lines_vbo, point_line_vertex_layout);
 
             // text setup
             text_shader = std::make_unique<Shader>("../shaders/text.vert", "../shaders/text.frag");
             text_vao = std::make_unique<VertexArray>();
-            text_vbo = std::make_unique<VertexBufferDynamic>(MAX_VERTICES * sizeof(TextVertex));
+            text_vbo = std::make_unique<VertexBufferDynamic>(MAX_QUAD_VERTICES * sizeof(TextVertex));
 
             VertexBufferLayout layout
             {
@@ -117,8 +114,8 @@ namespace renderer2D
             text_vao->attach_index_buffer(*quads_ibo);
 
             // query for max number of textures
-            glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURES);
-            textures.reserve(MAX_TEXTURES);
+            glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_textures);
+            textures.reserve(max_textures);
         });
     }
 
@@ -155,7 +152,6 @@ namespace renderer2D
         {
             points_vbo->set_data(point_vertices.data(), point_vertices.size() * sizeof(PointVertex));
             point_line_shader->bind();
-            point_line_shader->set_mat4("u_view_proj", *view_projection_matrix);
             points_vao->bind();
 
             glDrawArrays(GL_POINTS, 0, point_vertices.size());
@@ -171,7 +167,6 @@ namespace renderer2D
         {
             lines_vbo->set_data(line_vertices.data(), line_vertices.size() * sizeof(PointVertex));
             point_line_shader->bind();
-            point_line_shader->set_mat4("u_view_proj", *view_projection_matrix);
             lines_vao->bind();
 
             glDrawArrays(GL_LINES, 0, line_vertices.size());
@@ -188,7 +183,6 @@ namespace renderer2D
             text_vbo->set_data(text_vertices.data(), text_vertices.size() * sizeof(TextVertex));
             bind_textures();
             text_shader->bind();
-            text_shader->set_mat4("u_view_proj", *view_projection_matrix);
             text_vao->bind();
 
             glDrawElements(GL_TRIANGLES, text_index_count, GL_UNSIGNED_INT, nullptr);
@@ -197,11 +191,6 @@ namespace renderer2D
             text_vao->unbind();
             text_shader->unbind();
         }
-    }
-
-    void pre_render(const OrthographicCamera& camera)
-    {
-        view_projection_matrix = &camera.get_view_projection_matrix();
     }
 
     void render()
@@ -215,7 +204,7 @@ namespace renderer2D
 
     void draw_point(float x, float y, const glm::vec4& color)
     {
-        if (point_vertices.size() == MAX_VERTICES)
+        if (point_vertices.size() == MAX_POINT_VERTICES)
             render_points();
 
         point_vertices.push_back({{x, y}, color});
@@ -228,7 +217,7 @@ namespace renderer2D
 
     void draw_line(float x1, float y1, float x2, float y2, const glm::vec4& color)
     {
-        if (line_vertices.size() + 2 > MAX_VERTICES)
+        if (line_vertices.size() + 2 > MAX_LINE_VERTICES)
             render_lines();
 
         line_vertices.push_back({{x1, y1}, color});
@@ -245,7 +234,7 @@ namespace renderer2D
         assert(text.font_atlas);
 
         // flush current batch if the max number of vertices will be surpassed in this function
-        if (text_vertices.size() + text.string.size() * 4 >= MAX_VERTICES)
+        if (text_vertices.size() + text.string.size() * 4 >= MAX_QUAD_VERTICES)
             render();
 
         // check if font texture is in textures
@@ -254,7 +243,7 @@ namespace renderer2D
         if (itr == textures.end())
         {
             // the number of textures is at max textures, so flush current batch
-            if (textures.size() == MAX_TEXTURES)
+            if (textures.size() == max_textures)
                 render();
 
             textures.push_back(text.font_atlas->get_texture_id());

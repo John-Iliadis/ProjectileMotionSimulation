@@ -8,11 +8,13 @@
 Scene::Scene(uint32_t width, uint32_t height)
     : m_fbo(GL_TEXTURE_2D_MULTISAMPLE, width, height)
     , m_intermediate_fbo(GL_TEXTURE_2D, width, height)
+    , m_view_proj_ubo(sizeof(glm::mat4), 0)
     , m_width(width)
     , m_height(height)
     , m_graph(std::make_shared<Graph>())
     , m_simulation(m_graph)
 {
+    m_view_proj_ubo.bind();
 }
 
 void Scene::update(double dt)
@@ -23,10 +25,8 @@ void Scene::update(double dt)
 void Scene::render()
 {
     pre_render();
-    renderer2D::pre_render(m_camera);
 
     m_graph->render();
-    m_simulation.set_view_proj(m_camera.get_view_projection_matrix());
     m_simulation.render();
 
     renderer2D::render();
@@ -59,6 +59,7 @@ void Scene::pre_render()
     }
 
     m_fbo.bind();
+    m_view_proj_ubo.set_data(&m_camera.get_view_projection_matrix(), sizeof(glm::mat4));
 
     glClearColor(35 / 255.f, 45 / 255.f, 55 / 255.f, 1);
     glClear(GL_COLOR_BUFFER_BIT);

@@ -5,6 +5,8 @@
 #include "simulation.hpp"
 
 
+static float v[2] {2.f, 2.f};
+
 Simulation::Simulation(std::shared_ptr<Graph>& graph)
     : m_graph(graph)
     , m_state(State::INIT)
@@ -18,7 +20,6 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_show_velocity_vector(true)
     , m_show_velocity_vector_components(true)
     , m_show_trajectory(true)
-    , m_view_proj()
     , m_velocity_vector(m_graph->get_origin(),
                         m_initial_velocity,
                         m_initial_angle,
@@ -37,28 +38,14 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
 
 void Simulation::update(double dt)
 {
-
+    update_vectors(dt);
 }
 
 void Simulation::render()
 {
-    m_velocity_vector.set_meter_as_pixels(m_graph->get_meter_as_pixels());
-    m_velocity_vector_x_component.set_meter_as_pixels(m_graph->get_meter_as_pixels());
-    m_velocity_vector_y_component.set_meter_as_pixels(m_graph->get_meter_as_pixels());
-    m_velocity_vector.set_view_proj_matrix(*m_view_proj);
-    m_velocity_vector_x_component.set_view_proj_matrix(*m_view_proj);
-    m_velocity_vector_y_component.set_view_proj_matrix(*m_view_proj);
-    m_velocity_vector.render();
-    m_velocity_vector_x_component.render();
-    m_velocity_vector_y_component.render();
-
+    render_vectors();
     control_panel();
     info_panel();
-}
-
-void Simulation::set_view_proj(const glm::mat4 &matrix)
-{
-    m_view_proj = &matrix;
 }
 
 void Simulation::reset_initial_conditions()
@@ -73,6 +60,8 @@ void Simulation::control_panel()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 4.f));
     ImGui::Begin("Control Panel");
 
+    ImGui::DragFloat2("sdfsd", v, 0.1f, -5, 5);
+
     constexpr ImVec2 BUTTON_SIZE(70, 20);
 
     { // Simulation controls
@@ -86,7 +75,7 @@ void Simulation::control_panel()
     { // Initial conditions
         ImGui::Spacing();
         ImGui::SeparatorText("Initial Conditions");
-        ImGui::SliderFloat("Velocity", &m_initial_velocity, 0, 100, "%.2f m/s");
+        ImGui::SliderFloat("Velocity", &m_initial_velocity, -5, 5, "%.2f m/s");
         ImGui::SliderInt("Angle", &m_initial_angle, 0, 90, "%d deg");
         ImGui::SliderFloat("Height", &m_initial_height, 0, 100, "%.2f m");
     }
@@ -159,4 +148,19 @@ void Simulation::info_panel()
 
     ImGui::End();
     ImGui::PopStyleVar(1);
+}
+
+void Simulation::update_vectors(double dt)
+{
+    const auto meter_as_pixels = m_graph->get_meter_as_pixels();
+    m_velocity_vector.set_meter_as_pixels(meter_as_pixels);
+    m_velocity_vector_x_component.set_meter_as_pixels(meter_as_pixels);
+    m_velocity_vector_y_component.set_meter_as_pixels(meter_as_pixels);
+}
+
+void Simulation::render_vectors()
+{
+    m_velocity_vector.render();
+    m_velocity_vector_x_component.render();
+    m_velocity_vector_y_component.render();
 }

@@ -25,13 +25,6 @@ namespace renderer2D::constants
     constexpr uint32_t LINE_VERTEX_COUNT = 2;
     constexpr uint32_t MAX_LINES = 20'000;
     constexpr uint32_t MAX_LINE_VERTICES = MAX_LINES * LINE_VERTEX_COUNT;
-
-    // vectors
-    constexpr uint32_t VECTOR_VERTEX_COUNT = 7;
-    constexpr uint32_t VECTOR_INDEX_COUNT = 9;
-    constexpr uint32_t MAX_VECTORS = 1000;
-    constexpr uint32_t MAX_VECTOR_VERTICES = MAX_VECTORS * VECTOR_VERTEX_COUNT;
-    constexpr uint32_t MAX_VECTOR_INDICES = MAX_VECTORS * VECTOR_INDEX_COUNT;
 }
 
 

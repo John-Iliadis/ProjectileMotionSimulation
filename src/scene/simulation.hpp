@@ -18,7 +18,6 @@ public:
 
     void update(double dt);
     void render();
-    void set_view_proj(const glm::mat4& matrix);
 
 private:
     enum class State
@@ -40,6 +39,8 @@ private:
 
 private:
     void reset_initial_conditions();
+    void update_vectors(double dt);
+    void render_vectors();
     void control_panel();
     void info_panel();
 
@@ -59,7 +60,6 @@ private:
     Vector m_velocity_vector;
     Vector m_velocity_vector_x_component;
     Vector m_velocity_vector_y_component;
-    const glm::mat4* m_view_proj;
 };
 
 

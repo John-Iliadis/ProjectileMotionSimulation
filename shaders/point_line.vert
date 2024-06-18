@@ -2,10 +2,12 @@
 
 layout (location = 0) in vec2 position;
 layout (location = 1) in vec4 color;
+layout (std140, binding = 0) uniform ViewProjectionMatrix
+{
+    mat4 u_view_proj;
+};
 
 out vec4 v_color;
-
-uniform mat4 u_view_proj;
 
 void main()
 {

@@ -65,7 +65,10 @@ add_executable(${PROJECT_NAME}
         src/scene/vector.cpp
         src/scene/vector.hpp
         src/scene/simulation.cpp
-        src/scene/simulation.hpp)
+        src/scene/simulation.hpp
+        src/renderer2D/renderer2D_constants.hpp
+        src/rendering/uniform_buffer_object_dynamic.cpp
+        src/rendering/uniform_buffer_object_dynamic.hpp)
 
 find_package(OpenGL REQUIRED)
 

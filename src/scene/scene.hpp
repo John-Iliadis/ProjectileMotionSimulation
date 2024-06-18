@@ -7,6 +7,7 @@
 
 #include <glfw/glfw3.h>
 #include <imgui/imgui.h>
+#include "../rendering/uniform_buffer_object_dynamic.hpp"
 #include "../rendering/rendering_includes.hpp"
 #include "../camera/orthographic_camera.hpp"
 #include "../renderer2D/renderer2D_includes.hpp"
@@ -32,6 +33,7 @@ private:
 private:
     FrameBuffer m_fbo; // anti-aliased framebuffer
     FrameBuffer m_intermediate_fbo;
+    UniformBufferObjectDynamic m_view_proj_ubo;
     OrthographicCamera m_camera;
     std::shared_ptr<Graph> m_graph;
     Simulation m_simulation;

@@ -17,6 +17,8 @@
 #include "../rendering/vertex_buffer_dynamic.hpp"
 #include "../rendering/index_buffer_dynamic.hpp"
 #include "../camera/orthographic_camera.hpp"
+#include "../scene/vector.hpp"
+#include "renderer2D_constants.hpp"
 #include "font_atlas.hpp"
 #include "text.hpp"
 
@@ -25,7 +27,6 @@
 namespace renderer2D
 {
     void init_renderer();
-    void pre_render(const OrthographicCamera& camera);
     void render();
 
     void draw_point(float x, float y, const glm::vec4& color = glm::vec4(1));
