@@ -5,16 +5,32 @@
 #include "vector.hpp"
 
 
+static std::once_flag flag;
+static std::unique_ptr<Shader> vector_shader;
+static std::unique_ptr<IndexBufferStatic> vector_ibo;
+static VertexBufferLayout vector_buffer_layout;
+
+static constexpr uint32_t VECTOR_VERTEX_COUNT = 7;
+static constexpr uint32_t VECTOR_VERTEX_SIZE = 2 * sizeof(float);
+static constexpr uint32_t VECTOR_INDEX_COUNT = 9;
+static constexpr uint32_t vector_indices[VECTOR_INDEX_COUNT]
+{
+    0, 1, 2,
+    0, 2, 3,
+    4, 5, 6
+};
+
+
 Vector::Vector()
     : Vector(glm::vec2(), glm::vec2(), 0)
 {
 }
 
 Vector::Vector(const glm::vec2 &pos, float velocity, float angle, float meter_as_pixels, const glm::vec4 &color)
-        : Vector(pos,
-                 {velocity * glm::cos(glm::radians(angle)), velocity * glm::sin(glm::radians(angle))},
-                 meter_as_pixels,
-                 color)
+    : Vector(pos,
+             {velocity * glm::cos(glm::radians(angle)), velocity * glm::sin(glm::radians(angle))},
+             meter_as_pixels,
+             color)
 {
 }
 
@@ -23,65 +39,18 @@ Vector::Vector(const glm::vec2 &pos, const glm::vec2 &vel, float meter_as_pixels
     , m_velocity(vel)
     , m_meter_as_pixels(meter_as_pixels)
     , m_color(color)
-    , m_shader("../shaders/vector.vert", "../shaders/vector.frag")
-    , m_view_proj()
-    , m_model(1)
 {
-    m_vbo = VertexBufferDynamic(7 * 2 * sizeof(float));
+    std::call_once(flag, Vector::init);
 
-    constexpr uint32_t indices[]
-    {
-        0, 1, 2,
-        0, 2, 3,
-        4, 5, 6
-    };
+    m_vbo = VertexBufferDynamic(VECTOR_VERTEX_COUNT * VECTOR_VERTEX_SIZE);
 
-    m_ibo = IndexBufferStatic(indices, 9);
-
-    VertexBufferLayout layout{{0, 2, GL_FLOAT, GL_FALSE}};
-
-    m_vao.attach_vertex_buffer(m_vbo, layout);
-    m_vao.attach_index_buffer(m_ibo);
+    m_vao.attach_vertex_buffer(m_vbo, vector_buffer_layout);
+    m_vao.attach_index_buffer(*vector_ibo);
 }
 
 void Vector::render()
 {
-    constexpr float arrow_head_length = 20;
-    constexpr float shaft_width = 5;
-    constexpr float arrow_head_width = 10;
-    const float vector_length = std::sqrt(std::pow(m_velocity.x, 2) + std::pow(m_velocity.y, 2));
-    const float angle = std::atan(m_velocity.y / m_velocity.x);
-    const float vector_length_scaled = vector_length * m_meter_as_pixels;
-    const float shaft_length = glm::clamp(vector_length_scaled - arrow_head_length, 0.f, std::numeric_limits<float>::max()) ;
-
-    const float vertices[]
-    {
-        m_position.x, m_position.y - shaft_width / 2.f,
-        m_position.x, m_position.y + shaft_width / 2.f,
-        m_position.x + shaft_length, m_position.y + shaft_width / 2.f,
-        m_position.x + shaft_length, m_position.y - shaft_width / 2.f,
-
-        m_position.x + shaft_length, m_position.y - arrow_head_width / 2.f,
-        m_position.x + shaft_length, m_position.y + arrow_head_width / 2.f,
-        m_position.x + shaft_length + arrow_head_length, m_position.y
-    };
-
-    m_model = glm::translate(glm::mat4(1), glm::vec3(m_position, 0));
-    m_model = glm::rotate(m_model, angle, glm::vec3(0, 0, 1));
-    m_model = glm::translate(m_model, glm::vec3(-m_position, 0));
-
-    m_vbo.set_data(vertices, 7 * 2 * sizeof(float));
-
-    // render here
-    m_vao.bind();
-    m_shader.bind();
-    m_shader.set_mat4("u_mvp_matrix", *m_view_proj * m_model);
-    m_shader.set_float4("u_color", m_color);
-
-    glDrawElements(GL_TRIANGLES, m_ibo.get_count(), GL_UNSIGNED_INT, nullptr);
-
-    m_vao.unbind();
-    m_shader.unbind();
+    render_impl(*this);
 }
 
 void Vector::set_position(const glm::vec2 &position)
@@ -109,7 +78,55 @@ void Vector::set_meter_as_pixels(float meter_as_pixels)
     m_meter_as_pixels = meter_as_pixels;
 }
 
-void Vector::set_view_proj_matrix(const glm::mat4 &matrix)
+void Vector::init()
 {
-    m_view_proj = &matrix;
+    vector_shader = std::make_unique<Shader>("../shaders/vector.vert", "../shaders/vector.frag");
+    vector_ibo = std::make_unique<IndexBufferStatic>(vector_indices, 9);
+    vector_buffer_layout = {{0, 2, GL_FLOAT, GL_TRUE}};
+}
+
+void Vector::render_impl(const Vector &vector)
+{
+    if (!vector.m_velocity.x && !vector.m_velocity.y)
+        return;
+
+    const glm::vec2& pos = vector.m_position;
+    const glm::vec2& velocity = vector.m_velocity;
+
+    constexpr float ARROW_HEAD_LENGTH = 20.f;
+    constexpr float ARROW_HEAD_WIDTH = 10.f;
+    constexpr float SHAFT_WIDTH = 5.f;
+
+    const float vector_length = std::hypot(velocity.x, velocity.y) * vector.m_meter_as_pixels;
+    const float shaft_length = glm::clamp(vector_length - ARROW_HEAD_LENGTH, 0.f, std::numeric_limits<float>::max());
+
+    const float vertices[]
+    {
+        pos.x, pos.y - SHAFT_WIDTH / 2.f,
+        pos.x, pos.y + SHAFT_WIDTH / 2.f,
+        pos.x + shaft_length, pos.y + SHAFT_WIDTH / 2.f,
+        pos.x + shaft_length, pos.y - SHAFT_WIDTH / 2.f,
+
+        pos.x + shaft_length, pos.y - ARROW_HEAD_WIDTH / 2.f,
+        pos.x + shaft_length, pos.y + ARROW_HEAD_WIDTH / 2.f,
+        pos.x + shaft_length + ARROW_HEAD_LENGTH, pos.y
+    };
+
+    const float angle = std::atan2(velocity.y, velocity.x);
+    glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(pos, 0));
+    model = glm::rotate(model, angle, glm::vec3(0, 0, 1));
+    model = glm::translate(model, glm::vec3(-pos, 0));
+
+    vector.m_vbo.set_data(vertices, VECTOR_VERTEX_COUNT * VECTOR_VERTEX_SIZE);
+
+    // render here
+    vector.m_vao.bind();
+    vector_shader->bind();
+    vector_shader->set_mat4("u_model", model);
+    vector_shader->set_float4("u_color", vector.m_color);
+
+    glDrawElements(GL_TRIANGLES, VECTOR_INDEX_COUNT, GL_UNSIGNED_INT, nullptr);
+
+    vector.m_vao.unbind();
+    vector_shader->unbind();
 }

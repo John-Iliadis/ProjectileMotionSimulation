@@ -7,6 +7,8 @@
 
 #include <cmath>
 #include <imgui/imgui.h>
+#include <memory>
+#include <mutex>
 #include "../rendering/rendering_includes.hpp"
 
 
@@ -23,20 +25,19 @@ public:
     void set_velocity(const glm::vec2& velocity);
     void set_velocity(float x, float y);
     void set_meter_as_pixels(float meter_as_pixels);
-    void set_view_proj_matrix(const glm::mat4& matrix);
+
+private:
+    static void init();
+    static void render_impl(const Vector& vector);
 
 private:
     glm::vec2 m_position;
-    glm::vec2 m_velocity; // m/s
+    glm::vec2 m_velocity;
     glm::vec4 m_color;
     float m_meter_as_pixels;
 
     VertexArray m_vao;
-    VertexBufferDynamic m_vbo;
-    IndexBufferStatic m_ibo;
-    Shader m_shader;
-    const glm::mat4* m_view_proj;
-    glm::mat4 m_model;
+    mutable VertexBufferDynamic m_vbo;
 };
 
 
