@@ -265,6 +265,12 @@ void Simulation::control_panel()
         ImGui::EndDisabled();
     }
 
+    { // Progress bar
+        ImGui::Spacing();
+        ImGui::SeparatorText("Progress");
+        ImGui::ProgressBar(m_simulation_time / m_duration);
+    }
+
     { // Stats
         ImGui::Spacing();
         ImGui::SeparatorText("Stats");
