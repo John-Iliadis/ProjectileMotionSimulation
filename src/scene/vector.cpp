@@ -37,8 +37,9 @@ Vector::Vector(const glm::vec2 &pos, float velocity, float angle, float meter_as
 Vector::Vector(const glm::vec2 &pos, const glm::vec2 &vel, float meter_as_pixels, const glm::vec4 &color)
     : m_position(pos)
     , m_velocity(vel)
-    , m_meter_as_pixels(meter_as_pixels)
     , m_color(color)
+    , m_meter_as_pixels(meter_as_pixels)
+    , m_magnification(1.f)
 {
     std::call_once(flag, Vector::init);
 
@@ -78,6 +79,11 @@ void Vector::set_meter_as_pixels(float meter_as_pixels)
     m_meter_as_pixels = meter_as_pixels;
 }
 
+void Vector::set_magnification(float magnification)
+{
+    m_magnification = magnification;
+}
+
 void Vector::init()
 {
     vector_shader = std::make_unique<Shader>("../shaders/vector.vert", "../shaders/vector.frag");
@@ -98,7 +104,7 @@ void Vector::render_impl(const Vector &vector)
     constexpr float ARROW_HEAD_WIDTH = 10.f;
     constexpr float SHAFT_WIDTH = 5.f;
 
-    const float vector_length = std::hypot(velocity.x, velocity.y) * vector.m_meter_as_pixels;
+    const float vector_length = std::hypot(velocity.x, velocity.y) * vector.m_meter_as_pixels * vector.m_magnification;
     const float shaft_length = glm::clamp(vector_length - ARROW_HEAD_LENGTH, 0.f, std::numeric_limits<float>::max());
 
     const float vertices[]

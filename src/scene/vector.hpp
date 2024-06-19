@@ -25,6 +25,7 @@ public:
     void set_velocity(const glm::vec2& velocity);
     void set_velocity(float x, float y);
     void set_meter_as_pixels(float meter_as_pixels);
+    void set_magnification(float magnification);
 
 private:
     static void init();
@@ -35,6 +36,7 @@ private:
     glm::vec2 m_velocity;
     glm::vec4 m_color;
     float m_meter_as_pixels;
+    float m_magnification;
 
     VertexArray m_vao;
     mutable VertexBufferDynamic m_vbo;

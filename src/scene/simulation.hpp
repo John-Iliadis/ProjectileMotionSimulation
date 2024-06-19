@@ -65,7 +65,7 @@ private:
     float m_gravity;
     SimulationSpeed m_simulation_speed;
     float m_duration;
-    float m_vector_length;
+    float m_vector_magnification;
 
     bool m_show_velocity_vector;
     bool m_show_velocity_vector_components;

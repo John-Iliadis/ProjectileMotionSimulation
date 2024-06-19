@@ -27,7 +27,7 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_gravity(9.81f)
     , m_simulation_speed(SimulationSpeed::NORMAL)
     , m_duration(30.f)
-    , m_vector_length(1)
+    , m_vector_magnification(1.f)
     , m_show_velocity_vector(true)
     , m_show_velocity_vector_components(true)
     , m_show_trajectory(true)
@@ -236,7 +236,14 @@ void Simulation::control_panel()
     { // Visualization options
         ImGui::Spacing();
         ImGui::SeparatorText("Visualization Options");
-        ImGui::SliderFloat("Vector Length", &m_vector_length, 0, 10, "%.2f");
+
+        if (ImGui::SliderFloat("Vector Size", &m_vector_magnification, 0.1f, 5, "%.2f"))
+        {
+            m_velocity_vector.set_magnification(m_vector_magnification);
+            m_velocity_vector_x_component.set_magnification(m_vector_magnification);
+            m_velocity_vector_y_component.set_magnification(m_vector_magnification);
+        }
+
         ImGui::Checkbox("Show Velocity Vector", &m_show_velocity_vector);
         ImGui::Checkbox("Show Velocity Vector Components", &m_show_velocity_vector_components);
         ImGui::Checkbox("Show Trajectory", &m_show_trajectory);
@@ -279,6 +286,5 @@ void Simulation::reset()
 {
     m_state = State::INIT;
     m_position = m_origin;
-    m_gravity = 9.81;
     m_simulation_time = 0;
 }
