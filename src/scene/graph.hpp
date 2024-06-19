@@ -33,8 +33,8 @@ public:
     void create(float width, float height);
     void render();
 
-    void zoom_in();
-    void zoom_out();
+    void zoom_in(int count = 1);
+    void zoom_out(int count = 1);
 
     float get_meter_as_pixels() const;
     uint8_t get_zoom_level() const;

@@ -73,13 +73,13 @@ float Graph::get_meter_as_pixels() const
     return m_height / scale.at(m_zoom_level);
 }
 
-void Graph::zoom_in()
+void Graph::zoom_in(int count)
 {
-    if (m_zoom_level - 1 >= 0)
+    if (m_zoom_level - count >= 0)
     {
-        --m_zoom_level;
+        m_zoom_level -= count;
 
-        const float change = static_cast<float>(scale.at(m_zoom_level)) / static_cast<float>(scale.at(m_zoom_level + 1));
+        const float change = static_cast<float>(scale.at(m_zoom_level)) / static_cast<float>(scale.at(m_zoom_level + count));
 
         for (Point& point : m_points)
         {
@@ -89,13 +89,13 @@ void Graph::zoom_in()
     }
 }
 
-void Graph::zoom_out()
+void Graph::zoom_out(int count)
 {
-    if (m_zoom_level + 1 < scale.size())
+    if (m_zoom_level + count < scale.size())
     {
-        ++m_zoom_level;
+        m_zoom_level += count;
 
-        const float change = static_cast<float>(scale.at(m_zoom_level)) / static_cast<float>(scale.at(m_zoom_level - 1));
+        const float change = static_cast<float>(scale.at(m_zoom_level)) / static_cast<float>(scale.at(m_zoom_level - count));
 
         for (Point& point : m_points)
         {
