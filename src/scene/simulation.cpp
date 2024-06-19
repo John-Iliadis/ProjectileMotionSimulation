@@ -5,12 +5,18 @@
 #include "simulation.hpp"
 
 
+#define IMGUI_TEXT(str, char_count, offset, format, value)\
+    {char buffer[char_count];                             \
+    memcpy(buffer, str, strlen(str));                     \
+    sprintf(buffer + offset, format, value);              \
+    ImGui::Text(buffer);};                                \
+
 Simulation::Simulation(std::shared_ptr<Graph>& graph)
     : m_graph(graph)
     , m_state(State::INIT)
     , m_origin(m_graph->get_origin())
     , m_meter_as_pixels(m_graph->get_meter_as_pixels())
-    , m_initial_velocity(2.f)
+    , m_initial_velocity(25.f)
     , m_initial_angle(45.f)
     , m_initial_height(0.f)
     , m_initial_velocity_components(m_initial_velocity * glm::cos(glm::radians(m_initial_angle)),
@@ -39,6 +45,7 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
                                     m_meter_as_pixels,
                                     {1, 0, 0, 1})
 {
+    m_graph->zoom_out(3);
 }
 
 void Simulation::update(float dt)
@@ -46,14 +53,24 @@ void Simulation::update(float dt)
     m_origin = m_graph->get_origin();
     m_meter_as_pixels = m_graph->get_meter_as_pixels();
 
-    if (m_state == State::RUNNING)
-    {
-        m_simulation_time += dt;
-    }
-
+    update_simulation_time(dt);
     update_velocity();
     update_position();
     update_vectors();
+}
+
+void Simulation::update_simulation_time(float dt)
+{
+    if (m_state != State::RUNNING)
+        return;
+
+    m_simulation_time += dt;
+
+    if (m_simulation_time >= m_duration)
+    {
+        m_simulation_time = m_duration;
+        m_state = State::FINISHED;
+    }
 }
 
 void Simulation::update_velocity()
@@ -70,7 +87,7 @@ void Simulation::update_velocity()
 
         case State::RUNNING:
         {
-            m_velocity.y = m_initial_velocity_components.y - m_gravity * m_meter_as_pixels * m_simulation_time;
+            m_velocity.y = m_initial_velocity_components.y - m_gravity * m_simulation_time;
             break;
         }
 
@@ -95,8 +112,11 @@ void Simulation::update_position()
 
         case State::RUNNING:
         {
-            m_position.x = m_origin.x + m_initial_velocity_components.x * m_duration;
-//            m_position.y = m_origin.y + m_initial_velocity_components.y * static_cast<float>(m_duration) - m_gravity * m_meter_as_pixels * std::pow()
+            m_position.x = m_origin.x + m_initial_velocity_components.x * m_simulation_time * m_meter_as_pixels;
+
+            const float yo = m_origin.y + m_initial_height * m_meter_as_pixels;
+            const float y_offset = m_initial_velocity_components.y * m_simulation_time - m_gravity * std::pow(m_simulation_time, 2) / 2.f;
+            m_position.y = yo + y_offset * m_meter_as_pixels;
             break;
         }
 
@@ -133,7 +153,6 @@ void Simulation::render()
 {
     render_vectors();
     control_panel();
-    info_panel();
 }
 
 void Simulation::render_vectors()
@@ -191,13 +210,8 @@ void Simulation::control_panel()
         ImGui::SliderFloat("Velocity", &m_initial_velocity, 0, 100, "%.2f m/s");
         ImGui::SliderFloat("Angle", &m_initial_angle, 0.f, 90.f, "%.0f deg");
         ImGui::SliderFloat("Height", &m_initial_height, 0, 100, "%.2f m");
-        ImGui::EndDisabled();
-    }
-
-    { // Environmental factors
-        ImGui::Spacing();
-        ImGui::SeparatorText("Environmental Factors");
         ImGui::SliderFloat("Gravity", &m_gravity, 0, 30, "%.2f m/s^2");
+        ImGui::EndDisabled();
     }
 
     static constexpr char const* simulation_speeds[Simulation::SimulationSpeed::COUNT]
@@ -244,21 +258,18 @@ void Simulation::control_panel()
         ImGui::EndDisabled();
     }
 
-    ImGui::End();
-    ImGui::PopStyleVar(1);
-}
-
-void Simulation::info_panel()
-{
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 4.f));
-    ImGui::Begin("Info Panel");
-
-    static float x = 0;
-
-    ImGui::SeparatorText("Initial Conditions");
-    ImGui::SliderFloat("Velocity [m/s]", &x, 0, 100, "%.2f");
-    ImGui::SliderFloat("Angle [deg]", &x, 0, 90, "%.2f");
-    ImGui::SliderFloat("Height [m]", &x, 0, 100, "%.2f");
+    { // Stats
+        ImGui::Spacing();
+        ImGui::SeparatorText("Stats");
+        IMGUI_TEXT("Time: ", 50, 6, "%.2f sec", m_simulation_time);
+        ImGui::Spacing();
+        IMGUI_TEXT("X Position: ", 50, 12, "%.2f m", (m_position.x - m_origin.x) / m_meter_as_pixels);
+        IMGUI_TEXT("Y Position: ", 50, 12, "%.2f m", (m_position.y - m_origin.y) / m_meter_as_pixels);
+        ImGui::Spacing();
+        IMGUI_TEXT("Velocity: ", 50, 10, "%.2f m/s", std::hypot(m_velocity.x, m_velocity.y));
+        IMGUI_TEXT("Velocity.x: ", 50, 12, "%.2f m/s", m_velocity.x);
+        IMGUI_TEXT("Velocity.y: ", 50, 12, "%.2f m/s", m_velocity.y);
+    }
 
     ImGui::End();
     ImGui::PopStyleVar(1);
@@ -267,9 +278,7 @@ void Simulation::info_panel()
 void Simulation::reset()
 {
     m_state = State::INIT;
-    m_initial_velocity = 2.f;
-    m_initial_angle = 45;
-    m_initial_height = 0.f;
     m_position = m_origin;
+    m_gravity = 9.81;
     m_simulation_time = 0;
 }

@@ -40,12 +40,12 @@ private:
 
 private:
     void reset();
+    void update_simulation_time(float dt);
     void update_velocity();
     void update_position();
     void update_vectors();
     void render_vectors();
     void control_panel();
-    void info_panel();
 
 private:
     std::shared_ptr<Graph> m_graph;
