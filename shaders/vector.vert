@@ -10,5 +10,5 @@ uniform mat4 u_model;
 
 void main()
 {
-    gl_Position = u_view_proj * u_model * vec4(position, 0, 1); // todo: check model
+    gl_Position = u_view_proj * u_model * vec4(position, 0, 1);
 }
