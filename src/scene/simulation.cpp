@@ -61,15 +61,15 @@ void Simulation::update(float dt)
 
 void Simulation::update_simulation_time(float dt)
 {
-    if (m_state != State::RUNNING)
-        return;
-
-    m_simulation_time += dt;
-
-    if (m_simulation_time >= m_duration)
+    if (m_state == State::RUNNING)
     {
-        m_simulation_time = m_duration;
-        m_state = State::FINISHED;
+        m_simulation_time += dt * (0.25 * std::pow(2, static_cast<int>(m_simulation_speed)));
+
+        if (m_simulation_time >= m_duration)
+        {
+            m_simulation_time = m_duration;
+            m_state = State::FINISHED;
+        }
     }
 }
 
