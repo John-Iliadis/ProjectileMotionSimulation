@@ -87,7 +87,8 @@ void Vector::init()
 
 void Vector::render_impl(const Vector &vector)
 {
-    if (!vector.m_velocity.x && !vector.m_velocity.y)
+    constexpr float e = 1e-2f;
+    if (std::abs(vector.m_velocity.x) < e && std::abs(vector.m_velocity.y) < e)
         return;
 
     const glm::vec2& pos = vector.m_position;
