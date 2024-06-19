@@ -49,13 +49,17 @@ private:
 private:
     std::shared_ptr<Graph> m_graph;
     State m_state;
+    glm::vec2 m_origin;
+    float m_meter_as_pixels;
 
     float m_initial_velocity;
     int m_initial_angle;
     float m_initial_height;
+    glm::vec2 m_initial_velocity_components;
 
     glm::vec2 m_velocity;
     glm::vec2 m_position;
+    double m_simulation_time;
 
     float m_gravity;
     SimulationSpeed m_simulation_speed;

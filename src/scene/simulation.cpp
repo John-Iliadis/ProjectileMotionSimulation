@@ -8,12 +8,16 @@
 Simulation::Simulation(std::shared_ptr<Graph>& graph)
     : m_graph(graph)
     , m_state(State::INIT)
+    , m_origin(m_graph->get_origin())
+    , m_meter_as_pixels(m_graph->get_meter_as_pixels())
     , m_initial_velocity(2.f)
     , m_initial_angle(45)
     , m_initial_height(0.f)
-    , m_velocity(m_initial_velocity * glm::cos(glm::radians(static_cast<float>(m_initial_angle))),
-                 m_initial_velocity * glm::sin(glm::radians(static_cast<float>(m_initial_angle))))
-    , m_position(m_graph->get_origin())
+    , m_initial_velocity_components(m_initial_velocity * glm::cos(glm::radians(static_cast<float>(m_initial_angle))),
+                                    m_initial_velocity * glm::sin(glm::radians(static_cast<float>(m_initial_angle))))
+    , m_velocity(m_initial_velocity_components)
+    , m_position(m_origin)
+    , m_simulation_time()
     , m_gravity(9.81f)
     , m_simulation_speed(SimulationSpeed::NORMAL)
     , m_duration(30)
@@ -23,23 +27,29 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_show_trajectory(true)
     , m_velocity_vector(m_position,
                         m_initial_velocity,
-                        m_initial_angle,
-                        m_graph->get_meter_as_pixels(),
+                        static_cast<float>(m_initial_angle),
+                        m_meter_as_pixels,
                         {1, 0, 0, 1})
     , m_velocity_vector_x_component(m_position,
                                     {m_velocity.x, 0},
-                                    m_graph->get_meter_as_pixels(),
+                                    m_meter_as_pixels,
                                     {1, 0, 0, 1})
     , m_velocity_vector_y_component(m_position,
                                     {0, m_velocity.y},
-                                    m_graph->get_meter_as_pixels(),
+                                    m_meter_as_pixels,
                                     {1, 0, 0, 1})
 {
 }
 
 void Simulation::update(double dt)
 {
-    m_position = m_graph->get_origin(); // todo: remove this
+    m_origin = m_graph->get_origin();
+    m_meter_as_pixels = m_graph->get_meter_as_pixels();
+
+    if (m_state == State::RUNNING)
+    {
+        m_simulation_time += dt;
+    }
 
     update_velocity();
     update_position();
@@ -51,11 +61,19 @@ void Simulation::update_velocity()
     switch (m_state)
     {
         case State::INIT:
-            m_velocity.x = m_initial_velocity * glm::cos(glm::radians(static_cast<float>(m_initial_angle)));
-            m_velocity.y = m_initial_velocity * glm::sin(glm::radians(static_cast<float>(m_initial_angle)));
+        {
+            m_initial_velocity_components.x = m_initial_velocity * glm::cos(glm::radians(static_cast<float>(m_initial_angle)));
+            m_initial_velocity_components.y = m_initial_velocity * glm::sin(glm::radians(static_cast<float>(m_initial_angle)));
+            m_velocity = m_initial_velocity_components;
             break;
+        }
+
         case State::RUNNING:
+        {
+            //m_velocity.y = m_initial_velocity_components.y - m_gravity * m_meter_as_pixels * static_cast<float>(m_simulation_time);
             break;
+        }
+
         case State::PAUSED:
             break;
     }
@@ -66,10 +84,17 @@ void Simulation::update_position()
     switch (m_state)
     {
         case State::INIT:
-            m_position.y = m_graph->get_origin().y + m_initial_height * m_graph->get_meter_as_pixels();
+        {
+            m_position.x = m_origin.x;
+            m_position.y = m_origin.y + m_initial_height * m_meter_as_pixels;
             break;
+        }
+
         case State::RUNNING:
+        {
             break;
+        }
+
         case State::PAUSED:
             break;
     }
@@ -77,23 +102,21 @@ void Simulation::update_position()
 
 void Simulation::update_vectors()
 {
-    const auto meter_as_pixels = m_graph->get_meter_as_pixels();
-
     if (m_show_velocity_vector)
     {
         m_velocity_vector.set_velocity(m_velocity);
-        m_velocity_vector.set_meter_as_pixels(meter_as_pixels);
+        m_velocity_vector.set_meter_as_pixels(m_meter_as_pixels);
         m_velocity_vector.set_position(m_position);
     }
 
     if (m_show_velocity_vector_components)
     {
         m_velocity_vector_x_component.set_velocity(m_velocity.x, 0);
-        m_velocity_vector_x_component.set_meter_as_pixels(meter_as_pixels);
+        m_velocity_vector_x_component.set_meter_as_pixels(m_meter_as_pixels);
         m_velocity_vector_x_component.set_position(m_position);
 
         m_velocity_vector_y_component.set_velocity(0, m_velocity.y);
-        m_velocity_vector_y_component.set_meter_as_pixels(meter_as_pixels);
+        m_velocity_vector_y_component.set_meter_as_pixels(m_meter_as_pixels);
         m_velocity_vector_y_component.set_position(m_position);
     }
 }
@@ -239,5 +262,6 @@ void Simulation::reset()
     m_initial_velocity = 2.f;
     m_initial_angle = 45;
     m_initial_height = 0.f;
-    m_position = m_graph->get_origin();
+    m_position = m_origin;
+    m_simulation_time = 0;
 }
