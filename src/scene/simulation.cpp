@@ -11,23 +11,23 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_origin(m_graph->get_origin())
     , m_meter_as_pixels(m_graph->get_meter_as_pixels())
     , m_initial_velocity(2.f)
-    , m_initial_angle(45)
+    , m_initial_angle(45.f)
     , m_initial_height(0.f)
-    , m_initial_velocity_components(m_initial_velocity * glm::cos(glm::radians(static_cast<float>(m_initial_angle))),
-                                    m_initial_velocity * glm::sin(glm::radians(static_cast<float>(m_initial_angle))))
+    , m_initial_velocity_components(m_initial_velocity * glm::cos(glm::radians(m_initial_angle)),
+                                    m_initial_velocity * glm::sin(glm::radians(m_initial_angle)))
     , m_velocity(m_initial_velocity_components)
     , m_position(m_origin)
     , m_simulation_time()
     , m_gravity(9.81f)
     , m_simulation_speed(SimulationSpeed::NORMAL)
-    , m_duration(30)
+    , m_duration(30.f)
     , m_vector_length(1)
     , m_show_velocity_vector(true)
     , m_show_velocity_vector_components(true)
     , m_show_trajectory(true)
     , m_velocity_vector(m_position,
                         m_initial_velocity,
-                        static_cast<float>(m_initial_angle),
+                        m_initial_angle,
                         m_meter_as_pixels,
                         {1, 0, 0, 1})
     , m_velocity_vector_x_component(m_position,
@@ -41,7 +41,7 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
 {
 }
 
-void Simulation::update(double dt)
+void Simulation::update(float dt)
 {
     m_origin = m_graph->get_origin();
     m_meter_as_pixels = m_graph->get_meter_as_pixels();
@@ -62,19 +62,22 @@ void Simulation::update_velocity()
     {
         case State::INIT:
         {
-            m_initial_velocity_components.x = m_initial_velocity * glm::cos(glm::radians(static_cast<float>(m_initial_angle)));
-            m_initial_velocity_components.y = m_initial_velocity * glm::sin(glm::radians(static_cast<float>(m_initial_angle)));
+            m_initial_velocity_components.x = m_initial_velocity * glm::cos(glm::radians(m_initial_angle));
+            m_initial_velocity_components.y = m_initial_velocity * glm::sin(glm::radians(m_initial_angle));
             m_velocity = m_initial_velocity_components;
             break;
         }
 
         case State::RUNNING:
         {
-            //m_velocity.y = m_initial_velocity_components.y - m_gravity * m_meter_as_pixels * static_cast<float>(m_simulation_time);
+            m_velocity.y = m_initial_velocity_components.y - m_gravity * m_meter_as_pixels * m_simulation_time;
             break;
         }
 
         case State::PAUSED:
+            break;
+
+        case State::FINISHED:
             break;
     }
 }
@@ -92,10 +95,15 @@ void Simulation::update_position()
 
         case State::RUNNING:
         {
+            m_position.x = m_origin.x + m_initial_velocity_components.x * m_duration;
+//            m_position.y = m_origin.y + m_initial_velocity_components.y * static_cast<float>(m_duration) - m_gravity * m_meter_as_pixels * std::pow()
             break;
         }
 
         case State::PAUSED:
+            break;
+
+        case State::FINISHED:
             break;
     }
 }
@@ -181,7 +189,7 @@ void Simulation::control_panel()
 
         ImGui::BeginDisabled(m_state != State::INIT);
         ImGui::SliderFloat("Velocity", &m_initial_velocity, 0, 100, "%.2f m/s");
-        ImGui::SliderInt("Angle", &m_initial_angle, 0, 90, "%d deg");
+        ImGui::SliderFloat("Angle", &m_initial_angle, 0.f, 90.f, "%.0f deg");
         ImGui::SliderFloat("Height", &m_initial_height, 0, 100, "%.2f m");
         ImGui::EndDisabled();
     }
@@ -208,7 +216,7 @@ void Simulation::control_panel()
                          reinterpret_cast<int*>(&m_simulation_speed),
                          0, SimulationSpeed::COUNT - 1,
                          simulation_speeds[m_simulation_speed]);
-        ImGui::SliderInt("Duration", reinterpret_cast<int*>(&m_duration), 5, 100, "%d sec");
+        ImGui::SliderFloat("Duration", &m_duration, 5, 100, "%.0f sec");
     }
 
     { // Visualization options

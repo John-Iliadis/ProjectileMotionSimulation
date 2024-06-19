@@ -22,7 +22,7 @@ class Scene
 public:
     Scene(uint32_t width, uint32_t height);
 
-    void update(double dt);
+    void update(float dt);
     void render();
 
 private:

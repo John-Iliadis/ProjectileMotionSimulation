@@ -17,7 +17,7 @@ Scene::Scene(uint32_t width, uint32_t height)
     m_view_proj_ubo.bind();
 }
 
-void Scene::update(double dt)
+void Scene::update(float dt)
 {
     m_simulation.update(dt);
 }

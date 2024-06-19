@@ -16,7 +16,7 @@ class Simulation
 public:
     Simulation(std::shared_ptr<Graph>& graph);
 
-    void update(double dt);
+    void update(float dt);
     void render();
 
 private:
@@ -24,7 +24,8 @@ private:
     {
         INIT,
         RUNNING,
-        PAUSED
+        PAUSED,
+        FINISHED
     };
 
     enum SimulationSpeed
@@ -53,17 +54,17 @@ private:
     float m_meter_as_pixels;
 
     float m_initial_velocity;
-    int m_initial_angle;
+    float m_initial_angle;
     float m_initial_height;
     glm::vec2 m_initial_velocity_components;
 
     glm::vec2 m_velocity;
     glm::vec2 m_position;
-    double m_simulation_time;
+    float m_simulation_time;
 
     float m_gravity;
     SimulationSpeed m_simulation_speed;
-    uint32_t m_duration;
+    float m_duration;
     float m_vector_length;
 
     bool m_show_velocity_vector;

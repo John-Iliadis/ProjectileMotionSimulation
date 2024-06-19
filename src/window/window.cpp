@@ -19,12 +19,12 @@ Window::Window(uint32_t width, uint32_t height)
 // main loop of application
 void Window::run()
 {
-    double last_time {};
+    float last_time {};
 
     while (!glfwWindowShouldClose(m_window))
     {
-        double current_time = glfwGetTime();
-        double dt = current_time - last_time;
+        float current_time = glfwGetTime();
+        float dt = current_time - last_time;
         last_time = current_time;
 
         glfwPollEvents();
@@ -45,7 +45,7 @@ void Window::key_callback(GLFWwindow *p_window, int key, int scancode, int actio
     }
 }
 
-void Window::update(double dt)
+void Window::update(float dt)
 {
     m_scene.update(dt);
 }
@@ -63,7 +63,7 @@ void Window::render()
 }
 
 // fps counter
-void Window::update_frame_counter(double dt)
+void Window::update_frame_counter(float dt)
 {
     fps_update_time += dt;
     ++m_frame_count;
