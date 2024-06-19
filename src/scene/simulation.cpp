@@ -9,7 +9,7 @@
     {char buffer[char_count];                             \
     memcpy(buffer, str, strlen(str));                     \
     sprintf(buffer + offset, format, value);              \
-    ImGui::Text(buffer);};                                \
+    ImGui::Text(buffer);}                                 \
 
 Simulation::Simulation(std::shared_ptr<Graph>& graph)
     : m_graph(graph)
@@ -132,18 +132,18 @@ void Simulation::update_vectors()
 {
     if (m_show_velocity_vector)
     {
-        m_velocity_vector.set_velocity(m_velocity);
+        m_velocity_vector.set_magnitude(m_velocity);
         m_velocity_vector.set_meter_as_pixels(m_meter_as_pixels);
         m_velocity_vector.set_position(m_position);
     }
 
     if (m_show_velocity_vector_components)
     {
-        m_velocity_vector_x_component.set_velocity(m_velocity.x, 0);
+        m_velocity_vector_x_component.set_magnitude(m_velocity.x, 0);
         m_velocity_vector_x_component.set_meter_as_pixels(m_meter_as_pixels);
         m_velocity_vector_x_component.set_position(m_position);
 
-        m_velocity_vector_y_component.set_velocity(0, m_velocity.y);
+        m_velocity_vector_y_component.set_magnitude(0, m_velocity.y);
         m_velocity_vector_y_component.set_meter_as_pixels(m_meter_as_pixels);
         m_velocity_vector_y_component.set_position(m_position);
     }
@@ -274,14 +274,14 @@ void Simulation::control_panel()
     { // Stats
         ImGui::Spacing();
         ImGui::SeparatorText("Stats");
-        IMGUI_TEXT("Time: ", 50, 6, "%.2f sec", m_simulation_time);
+        IMGUI_TEXT("Time: ", 50, 6, "%.2f sec", m_simulation_time)
         ImGui::Spacing();
-        IMGUI_TEXT("X Position: ", 50, 12, "%.2f m", (m_position.x - m_origin.x) / m_meter_as_pixels);
-        IMGUI_TEXT("Y Position: ", 50, 12, "%.2f m", (m_position.y - m_origin.y) / m_meter_as_pixels);
+        IMGUI_TEXT("X Position: ", 50, 12, "%.2f m", (m_position.x - m_origin.x) / m_meter_as_pixels)
+        IMGUI_TEXT("Y Position: ", 50, 12, "%.2f m", (m_position.y - m_origin.y) / m_meter_as_pixels)
         ImGui::Spacing();
-        IMGUI_TEXT("Velocity: ", 50, 10, "%.2f m/s", std::hypot(m_velocity.x, m_velocity.y));
-        IMGUI_TEXT("Velocity.x: ", 50, 12, "%.2f m/s", m_velocity.x);
-        IMGUI_TEXT("Velocity.y: ", 50, 12, "%.2f m/s", m_velocity.y);
+        IMGUI_TEXT("Velocity: ", 50, 10, "%.2f m/s", std::hypot(m_velocity.x, m_velocity.y))
+        IMGUI_TEXT("Velocity.x: ", 50, 12, "%.2f m/s", m_velocity.x)
+        IMGUI_TEXT("Velocity.y: ", 50, 12, "%.2f m/s", m_velocity.y)
     }
 
     ImGui::End();

@@ -55,7 +55,6 @@ void Window::render()
     glClear(GL_COLOR_BUFFER_BIT);
     imgui_context.begin();
 
-    ImGui::ShowDemoWindow();
     m_scene.render();
 
     imgui_context.end();

@@ -26,17 +26,17 @@ Vector::Vector()
 {
 }
 
-Vector::Vector(const glm::vec2 &pos, float velocity, float angle, float meter_as_pixels, const glm::vec4 &color)
+Vector::Vector(const glm::vec2 &pos, float magnitude, float angle, float meter_as_pixels, const glm::vec4 &color)
     : Vector(pos,
-             {velocity * glm::cos(glm::radians(angle)), velocity * glm::sin(glm::radians(angle))},
+             {magnitude * glm::cos(glm::radians(angle)), magnitude * glm::sin(glm::radians(angle))},
              meter_as_pixels,
              color)
 {
 }
 
-Vector::Vector(const glm::vec2 &pos, const glm::vec2 &vel, float meter_as_pixels, const glm::vec4 &color)
+Vector::Vector(const glm::vec2 &pos, const glm::vec2 &magnitude, float meter_as_pixels, const glm::vec4 &color)
     : m_position(pos)
-    , m_velocity(vel)
+    , m_magnitude(magnitude)
     , m_color(color)
     , m_meter_as_pixels(meter_as_pixels)
     , m_magnification(1.f)
@@ -64,14 +64,14 @@ void Vector::set_position(float x, float y)
     m_position = {x, y};
 }
 
-void Vector::set_velocity(const glm::vec2 &velocity)
+void Vector::set_magnitude(const glm::vec2 &magnitude)
 {
-    m_velocity = velocity;
+    m_magnitude = magnitude;
 }
 
-void Vector::set_velocity(float x, float y)
+void Vector::set_magnitude(float x, float y)
 {
-    m_velocity = {x, y};
+    m_magnitude = {x, y};
 }
 
 void Vector::set_meter_as_pixels(float meter_as_pixels)
@@ -94,32 +94,31 @@ void Vector::init()
 void Vector::render_impl(const Vector &vector)
 {
     constexpr float e = 1e-2f;
-    if (std::abs(vector.m_velocity.x) < e && std::abs(vector.m_velocity.y) < e)
+    if (std::abs(vector.m_magnitude.x) < e && std::abs(vector.m_magnitude.y) < e)
         return;
 
     const glm::vec2& pos = vector.m_position;
-    const glm::vec2& velocity = vector.m_velocity;
+    const glm::vec2& magnitude = vector.m_magnitude;
 
-    constexpr float ARROW_HEAD_LENGTH = 20.f;
-    constexpr float ARROW_HEAD_WIDTH = 10.f;
-    constexpr float SHAFT_WIDTH = 5.f;
-
-    const float vector_length = std::hypot(velocity.x, velocity.y) * vector.m_meter_as_pixels * vector.m_magnification;
-    const float shaft_length = glm::clamp(vector_length - ARROW_HEAD_LENGTH, 0.f, std::numeric_limits<float>::max());
+    const float vector_length = std::hypot(magnitude.x, magnitude.y) * vector.m_meter_as_pixels * vector.m_magnification;
+    const float arrow_head_length = glm::clamp(vector_length, 0.f, 20.f);
+    const float arrow_head_width = arrow_head_length / 2.f;
+    const float shaft_width = 5.f;
+    const float shaft_length = glm::clamp(vector_length - arrow_head_length, 0.f, std::numeric_limits<float>::max());
 
     const float vertices[]
     {
-        pos.x, pos.y - SHAFT_WIDTH / 2.f,
-        pos.x, pos.y + SHAFT_WIDTH / 2.f,
-        pos.x + shaft_length, pos.y + SHAFT_WIDTH / 2.f,
-        pos.x + shaft_length, pos.y - SHAFT_WIDTH / 2.f,
+        pos.x, pos.y - shaft_width / 2.f,
+        pos.x, pos.y + shaft_width / 2.f,
+        pos.x + shaft_length, pos.y + shaft_width / 2.f,
+        pos.x + shaft_length, pos.y - shaft_width / 2.f,
 
-        pos.x + shaft_length, pos.y - ARROW_HEAD_WIDTH / 2.f,
-        pos.x + shaft_length, pos.y + ARROW_HEAD_WIDTH / 2.f,
-        pos.x + shaft_length + ARROW_HEAD_LENGTH, pos.y
+        pos.x + shaft_length, pos.y - arrow_head_width / 2.f,
+        pos.x + shaft_length, pos.y + arrow_head_width / 2.f,
+        pos.x + shaft_length + arrow_head_length, pos.y
     };
 
-    const float angle = std::atan2(velocity.y, velocity.x);
+    const float angle = std::atan2(magnitude.y, magnitude.x);
     glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(pos, 0));
     model = glm::rotate(model, angle, glm::vec3(0, 0, 1));
     model = glm::translate(model, glm::vec3(-pos, 0));
