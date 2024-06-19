@@ -35,20 +35,6 @@ void Graph::create(float width, float height)
 
 void Graph::render()
 {
-    ImGui::Begin("graph scale");
-
-    if (ImGui::Button("Zoom in"))
-    {
-        zoom_in();
-    }
-
-    if (ImGui::Button("Zoom out"))
-    {
-        zoom_out();
-    }
-
-    ImGui::End();
-
     // draw axes
     renderer2D::draw_line(m_axes[0], m_axes[1]);
     renderer2D::draw_line(m_axes[2], m_axes[3]);
