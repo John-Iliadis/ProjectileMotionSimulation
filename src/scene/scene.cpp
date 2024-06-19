@@ -27,9 +27,9 @@ void Scene::render()
     pre_render();
 
     m_graph->render();
-    m_simulation.render();
-
     renderer2D::render();
+
+    m_simulation.render();
     post_render();
 }
 
