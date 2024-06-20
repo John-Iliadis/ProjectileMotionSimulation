@@ -290,7 +290,7 @@ void Simulation::control_panel()
         IMGUI_TEXT("Y Position: ", 50, 12, "%.2f m", (m_position.y - m_origin.y) / m_meter_as_pixels)
         ImGui::Spacing();
         IMGUI_TEXT("Velocity: ", 50, 10, "%.2f m/s", std::hypot(m_velocity.x, m_velocity.y))
-        IMGUI_TEXT("Velocity.x: ", 50, 12, "%.2f m/s", m_velocity.x)
+        IMGUI_TEXT("Velocity.x: ", 50, 12, "%.2f m/s", std::abs(m_velocity.x) > 1e-2f? m_velocity.x : 0.f)
         IMGUI_TEXT("Velocity.y: ", 50, 12, "%.2f m/s", m_velocity.y)
     }
 

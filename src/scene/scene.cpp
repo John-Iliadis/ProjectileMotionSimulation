@@ -43,7 +43,6 @@ void Scene::pre_render()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0); // no border
     ImGui::Begin("Scene");
 
-    // todo: check if window is docked
     glm::uvec2 window_size
     {
         static_cast<uint32_t>(ImGui::GetContentRegionAvail().x),
@@ -52,10 +51,7 @@ void Scene::pre_render()
 
     if (m_width != window_size.x || m_height != window_size.y)
     {
-        if (ImGui::IsWindowDocked() || ImGui::IsMouseReleased(ImGuiMouseButton_Left))
-        {
-            resize_scene(window_size.x, window_size.y);
-        }
+        resize_scene(window_size.x, window_size.y);
     }
 
     m_fbo.bind();
