@@ -9,6 +9,7 @@
 #include <memory>
 #include "graph.hpp"
 #include "vector.hpp"
+#include "projectile.hpp"
 
 
 class Simulation
@@ -41,8 +42,9 @@ private:
 private:
     void reset();
     void update_simulation_time(float dt);
-    void update_velocity();
     void update_position();
+    void update_velocity();
+    void update_projectile();
     void update_vectors();
     void render_vectors();
     void control_panel();
@@ -71,6 +73,7 @@ private:
     bool m_show_velocity_vector_components;
     bool m_show_trajectory;
 
+    Projectile m_projectile;
     Vector m_velocity_vector;
     Vector m_velocity_vector_x_component;
     Vector m_velocity_vector_y_component;

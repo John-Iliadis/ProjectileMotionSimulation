@@ -31,6 +31,7 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_show_velocity_vector(true)
     , m_show_velocity_vector_components(true)
     , m_show_trajectory(true)
+    , m_projectile({16, 16}, m_position)
     , m_velocity_vector(m_position,
                         m_initial_velocity,
                         m_initial_angle,
@@ -54,9 +55,10 @@ void Simulation::update(float dt)
     m_meter_as_pixels = m_graph->get_meter_as_pixels();
 
     update_simulation_time(dt);
-    update_velocity();
     update_position();
+    update_velocity();
     update_vectors();
+    update_projectile();
 }
 
 void Simulation::update_simulation_time(float dt)
@@ -149,9 +151,15 @@ void Simulation::update_vectors()
     }
 }
 
+void Simulation::update_projectile()
+{
+    m_projectile.set_position(m_position);
+}
+
 void Simulation::render()
 {
     render_vectors();
+    m_projectile.render();
     control_panel();
 }
 
@@ -230,7 +238,9 @@ void Simulation::control_panel()
                          reinterpret_cast<int*>(&m_simulation_speed),
                          0, SimulationSpeed::COUNT - 1,
                          simulation_speeds[m_simulation_speed]);
+        ImGui::BeginDisabled(m_state != State::INIT);
         ImGui::SliderFloat("Duration", &m_duration, 5, 100, "%.0f sec");
+        ImGui::EndDisabled();
     }
 
     { // Visualization options

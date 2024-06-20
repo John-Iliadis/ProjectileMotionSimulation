@@ -70,7 +70,9 @@ add_executable(${PROJECT_NAME}
         src/rendering/uniform_buffer_object_dynamic.cpp
         src/rendering/uniform_buffer_object_dynamic.hpp
         src/rendering/texture.cpp
-        src/rendering/texture.hpp)
+        src/rendering/texture.hpp
+        src/scene/projectile.cpp
+        src/scene/projectile.hpp)
 
 find_package(OpenGL REQUIRED)
 
