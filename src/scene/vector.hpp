@@ -24,6 +24,7 @@ public:
     void set_position(float x, float y);
     void set_magnitude(const glm::vec2& magnitude);
     void set_magnitude(float x, float y);
+    void set_color_rgb(float r, float g, float b);
     void set_meter_as_pixels(float meter_as_pixels);
     void set_magnification(float magnification);
 

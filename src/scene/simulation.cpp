@@ -31,21 +31,14 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_show_velocity_vector(true)
     , m_show_velocity_vector_components(true)
     , m_show_trajectory(true)
-    , m_projectile({16, 16}, m_position)
-    , m_velocity_vector(m_position,
-                        m_initial_velocity,
-                        m_initial_angle,
-                        m_meter_as_pixels,
-                        {1, 0, 0, 1})
-    , m_velocity_vector_x_component(m_position,
-                                    {m_velocity.x, 0},
-                                    m_meter_as_pixels,
-                                    {1, 0, 0, 1})
-    , m_velocity_vector_y_component(m_position,
-                                    {0, m_velocity.y},
-                                    m_meter_as_pixels,
-                                    {1, 0, 0, 1})
+    , m_projectile({14, 14}, m_position)
+    , m_velocity_vector(m_position, m_initial_velocity, m_initial_angle, m_meter_as_pixels)
+    , m_velocity_vector_x_component(m_position, {m_velocity.x, 0}, m_meter_as_pixels)
+    , m_velocity_vector_y_component(m_position, {0, m_velocity.y}, m_meter_as_pixels)
 {
+    m_velocity_vector.set_color_rgb(255, 0, 0);
+    m_velocity_vector_x_component.set_color_rgb(0, 0, 255);
+    m_velocity_vector_y_component.set_color_rgb(0, 0, 255);
     m_graph->zoom_out(3);
 }
 
@@ -161,15 +154,15 @@ void Simulation::render()
 
 void Simulation::render_vectors()
 {
-    if (m_show_velocity_vector)
-    {
-        m_velocity_vector.render();
-    }
-
     if (m_show_velocity_vector_components)
     {
         m_velocity_vector_x_component.render();
         m_velocity_vector_y_component.render();
+    }
+
+    if (m_show_velocity_vector)
+    {
+        m_velocity_vector.render();
     }
 }
 

@@ -74,6 +74,11 @@ void Vector::set_magnitude(float x, float y)
     m_magnitude = {x, y};
 }
 
+void Vector::set_color_rgb(float r, float g, float b)
+{
+    m_color = {r / 255.f, g / 255.f, b / 255.f, 1.f};
+}
+
 void Vector::set_meter_as_pixels(float meter_as_pixels)
 {
     m_meter_as_pixels = meter_as_pixels;
