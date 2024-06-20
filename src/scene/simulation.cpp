@@ -112,6 +112,8 @@ void Simulation::update_position()
             break;
         }
 
+        case State::PAUSED:
+        case State::FINISHED:
         case State::RUNNING:
         {
             m_position.x = m_origin.x + m_initial_velocity_components.x * m_simulation_time * m_meter_as_pixels;
@@ -121,12 +123,6 @@ void Simulation::update_position()
             m_position.y = yo + y_offset * m_meter_as_pixels;
             break;
         }
-
-        case State::PAUSED:
-            break;
-
-        case State::FINISHED:
-            break;
     }
 }
 
