@@ -98,7 +98,7 @@ void Shader::set_float4(const std::string &name, float v0, float v1, float v2, f
 
 void Shader::set_float4(const std::string &name, const glm::vec4 &vec4)
 {
-    glUniform4f(get_uniform_location(name), vec4.x, vec4.y, vec4.x, vec4.w);
+    glUniform4f(get_uniform_location(name), vec4.x, vec4.y, vec4.z, vec4.w);
 }
 
 void Shader::set_mat4(const std::string &name, const glm::mat4 &matrix)
