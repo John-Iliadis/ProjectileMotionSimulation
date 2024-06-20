@@ -2,8 +2,6 @@
 // Created by Gianni on 19/02/2024.
 //
 
-#include <stb/stb_image_write.h>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "utils.hpp"
 
 

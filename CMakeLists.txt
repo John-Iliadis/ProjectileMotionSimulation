@@ -68,11 +68,16 @@ add_executable(${PROJECT_NAME}
         src/scene/simulation.hpp
         src/renderer2D/renderer2D_constants.hpp
         src/rendering/uniform_buffer_object_dynamic.cpp
-        src/rendering/uniform_buffer_object_dynamic.hpp)
+        src/rendering/uniform_buffer_object_dynamic.hpp
+        src/rendering/texture.cpp
+        src/rendering/texture.hpp)
 
 find_package(OpenGL REQUIRED)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        GLFW_INCLUDE_NONE
+        STB_IMAGE_WRITE_IMPLEMENTATION
+        STB_IMAGE_IMPLEMENTATION)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${GLAD_DIR}/include

@@ -11,5 +11,7 @@
 #include "index_buffer_static.hpp"
 #include "vertex_buffer_layout.hpp"
 #include "frame_buffer.hpp"
+#include "uniform_buffer_object_dynamic.hpp"
+#include "texture.hpp"
 
 #endif //PROJECTILEMOTIONSIM_RENDERING_INCLUDES_HPP
