@@ -148,6 +148,9 @@ void Simulation::update_projectile()
 
 void Simulation::update_trajectory()
 {
+    if (!m_show_trajectory)
+        return;
+
     m_trajectory.set_meter_as_pixels(m_meter_as_pixels);
     m_trajectory.set_initial_position(m_graph->get_origin());
 
@@ -169,14 +172,13 @@ void Simulation::update_trajectory()
             break;
         }
     }
-
 }
 
 void Simulation::render()
 {
     render_vectors();
     m_projectile.render();
-    m_trajectory.render();
+    m_show_trajectory? m_trajectory.render() : void(0);
     control_panel();
 }
 

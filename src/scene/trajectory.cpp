@@ -5,7 +5,7 @@
 #include "trajectory.hpp"
 
 
-static constexpr float LINE_LENGTH = 1.f;
+static constexpr float LINE_LENGTH = 8.f;
 
 Trajectory::Trajectory()
     : m_initial_position()
@@ -47,7 +47,7 @@ void Trajectory::update(const float simulation_time)
             - velocity.y * m_gravity,
             std::pow(velocity.x, 2.f) + std::pow(velocity.y, 2.f),
             0,
-            - std::pow(LINE_LENGTH, 2.f)
+            - std::pow(LINE_LENGTH / m_meter_as_pixels, 2.f)
         };
 
         float t = utils::poly4_root(poly4);
