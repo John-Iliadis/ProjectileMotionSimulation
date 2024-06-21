@@ -72,7 +72,9 @@ add_executable(${PROJECT_NAME}
         src/rendering/texture.cpp
         src/rendering/texture.hpp
         src/scene/projectile.cpp
-        src/scene/projectile.hpp)
+        src/scene/projectile.hpp
+        src/scene/trajectory.cpp
+        src/scene/trajectory.hpp)
 
 find_package(OpenGL REQUIRED)
 

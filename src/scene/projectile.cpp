@@ -4,6 +4,7 @@
 
 #include "projectile.hpp"
 
+
 static std::once_flag flag;
 static std::unique_ptr<Shader> shader;
 static std::unique_ptr<IndexBufferStatic> ibo;

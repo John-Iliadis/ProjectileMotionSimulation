@@ -26,7 +26,7 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_simulation_time()
     , m_gravity(9.81f)
     , m_simulation_speed(SimulationSpeed::NORMAL)
-    , m_duration(30.f)
+    , m_duration(10.f)
     , m_vector_magnification(1.f)
     , m_show_velocity_vector(true)
     , m_show_velocity_vector_components(true)
@@ -36,10 +36,10 @@ Simulation::Simulation(std::shared_ptr<Graph>& graph)
     , m_velocity_vector_x_component(m_position, {m_velocity.x, 0}, m_meter_as_pixels)
     , m_velocity_vector_y_component(m_position, {0, m_velocity.y}, m_meter_as_pixels)
 {
+    m_graph->zoom_out(3);
     m_velocity_vector.set_color_rgb(255, 0, 0);
     m_velocity_vector_x_component.set_color_rgb(0, 0, 255);
     m_velocity_vector_y_component.set_color_rgb(0, 0, 255);
-    m_graph->zoom_out(3);
 }
 
 void Simulation::update(float dt)
@@ -52,6 +52,7 @@ void Simulation::update(float dt)
     update_velocity();
     update_vectors();
     update_projectile();
+    update_trajectory();
 }
 
 void Simulation::update_simulation_time(float dt)
@@ -145,10 +146,37 @@ void Simulation::update_projectile()
     m_projectile.set_position(m_position);
 }
 
+void Simulation::update_trajectory()
+{
+    m_trajectory.set_meter_as_pixels(m_meter_as_pixels);
+    m_trajectory.set_initial_position(m_graph->get_origin());
+
+    switch (m_state)
+    {
+        case State::INIT:
+        {
+            m_trajectory.set_gravity(m_gravity);
+            m_trajectory.set_initial_velocity({m_initial_velocity * glm::cos(glm::radians(m_initial_angle)),
+                                               m_initial_velocity * glm::sin(glm::radians(m_initial_angle))});
+            break;
+        }
+
+        case State::RUNNING:
+        case State::PAUSED:
+        case State::FINISHED:
+        {
+            m_trajectory.update(m_simulation_time);
+            break;
+        }
+    }
+
+}
+
 void Simulation::render()
 {
     render_vectors();
     m_projectile.render();
+    m_trajectory.render();
     control_panel();
 }
 
@@ -195,7 +223,7 @@ void Simulation::control_panel()
 
         ImGui::BeginDisabled(m_state == State::INIT);
         if (ImGui::Button("Reset", BUTTON_SIZE))
-            { m_state = State::INIT; reset(); }
+            { m_state = State::INIT; reset(); m_trajectory.clear(); }
         ImGui::EndDisabled();
     }
 
@@ -272,7 +300,7 @@ void Simulation::control_panel()
 
     { // Stats
         ImGui::Spacing();
-        ImGui::SeparatorText("Stats");
+        ImGui::SeparatorText("Info");
         IMGUI_TEXT("Time: ", 50, 6, "%.2f sec", m_simulation_time)
         ImGui::Spacing();
         IMGUI_TEXT("X Position: ", 50, 12, "%.2f m", (m_position.x - m_origin.x) / m_meter_as_pixels)
