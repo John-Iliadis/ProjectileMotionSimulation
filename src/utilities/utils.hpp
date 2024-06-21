@@ -6,6 +6,7 @@
 #define PROJECTILEMOTIONSIM_UTILS_HPP
 
 #include <stdexcept>
+#include <array>
 #include <glad/glad.h>
 #include <stb/stb_image_write.h>
 #include <glm/glm.hpp>
@@ -18,6 +19,8 @@ namespace utils
     void save_texture_as_png(const std::string& file_name, uint32_t texture_id);
 
     glm::vec2 normalize_texture_coords(const glm::vec2& texture_coords, const glm::vec2& texture_size);
+
+    float poly4_root(const std::array<float, 5>& poly4, const uint32_t iterations = 10);
 };
 
 

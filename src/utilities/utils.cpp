@@ -62,4 +62,46 @@ namespace utils
     {
         return texture_coords / texture_size;
     }
+
+    float poly4_root(const std::array<float, 5>& poly4, const uint32_t max_iterations)
+    {
+        static auto f = [] (float param, const auto& arr) -> float
+        {
+            const float power = arr.size() == 5? 4 : 3;
+            float val = 0;
+
+            for (size_t i = 0; i < arr.size(); ++i)
+            {
+                val += arr[i] * std::pow(param, power - i);
+            }
+
+            return val;
+        };
+
+        const std::array<float, 4> derivative {4 * poly4[0], 3 * poly4[1], 2 * poly4[2], poly4[3]};
+        constexpr float e = 1e-2f;
+
+        float solution = 1.f;
+        for (uint32_t i = 0; i < max_iterations; ++i)
+        {
+            float y = f(solution, poly4);
+            float dy = f(solution, derivative);
+
+            if (std::fabs(dy) < e)
+            {
+                return solution;
+            }
+
+            float next = solution - y / dy;
+
+            if (std::fabs(next - solution) < e)
+            {
+                return next;
+            }
+
+            solution = next;
+        }
+
+        return solution;
+    }
 }
