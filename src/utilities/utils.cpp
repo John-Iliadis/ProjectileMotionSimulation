@@ -80,20 +80,21 @@ namespace utils
 
         const std::array<float, 4> derivative {4 * poly4[0], 3 * poly4[1], 2 * poly4[2], poly4[3]};
         constexpr float e = 1e-2f;
+        constexpr float initial_guess = 1.f;
 
         // Newton-Raphson
-        float solution = 0.1f;
+        float solution = initial_guess;//, old_solution = initial_guess;
         for (uint32_t i = 0; i < max_iterations; ++i)
         {
-            if (std::fabs(solution) < e && solution > 0.f)
-                return solution;
-
             float y = f(solution, poly4);
             float dy = f(solution, derivative);
+
+            if (std::fabs(y) < e && solution > 0.f)
+                return solution;
 
             solution -= y / dy;
         }
 
-        return solution;
+        return std::fabs(solution);
     }
 }
