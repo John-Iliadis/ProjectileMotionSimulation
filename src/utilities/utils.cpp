@@ -70,7 +70,7 @@ namespace utils
             const float power = arr.size() == 5? 4 : 3;
             float val = 0;
 
-            for (size_t i = 0; i < arr.size(); ++i)
+            for (size_t i = 0; i < power + 1; ++i)
             {
                 val += arr[i] * std::pow(param, power - i);
             }
@@ -81,25 +81,17 @@ namespace utils
         const std::array<float, 4> derivative {4 * poly4[0], 3 * poly4[1], 2 * poly4[2], poly4[3]};
         constexpr float e = 1e-2f;
 
-        float solution = 1.f;
+        // Newton-Raphson
+        float solution = 0.1f;
         for (uint32_t i = 0; i < max_iterations; ++i)
         {
+            if (std::fabs(solution) < e && solution > 0.f)
+                return solution;
+
             float y = f(solution, poly4);
             float dy = f(solution, derivative);
 
-            if (std::fabs(dy) < e)
-            {
-                return solution;
-            }
-
-            float next = solution - y / dy;
-
-            if (std::fabs(next - solution) < e)
-            {
-                return next;
-            }
-
-            solution = next;
+            solution -= y / dy;
         }
 
         return solution;

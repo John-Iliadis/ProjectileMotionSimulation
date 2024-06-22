@@ -99,7 +99,7 @@ void Vector::init()
 void Vector::render_impl(const Vector &vector)
 {
     constexpr float e = 1e-2f;
-    if (std::abs(vector.m_magnitude.x) < e && std::abs(vector.m_magnitude.y) < e)
+    if (std::fabs(vector.m_magnitude.x) < e && std::fabs(vector.m_magnitude.y) < e)
         return;
 
     const glm::vec2& pos = vector.m_position;
@@ -109,7 +109,7 @@ void Vector::render_impl(const Vector &vector)
     const float arrow_head_length = glm::clamp(vector_length, 0.f, 20.f);
     const float arrow_head_width = arrow_head_length / 2.f;
     const float shaft_width = 5.f;
-    const float shaft_length = glm::clamp(vector_length - arrow_head_length, 0.f, std::numeric_limits<float>::max());
+    const float shaft_length = vector_length > arrow_head_length? vector_length - arrow_head_length : 0.f;
 
     const float vertices[]
     {
