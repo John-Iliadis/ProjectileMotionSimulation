@@ -20,25 +20,31 @@ Window::Window(uint32_t width, uint32_t height)
 // main loop of application
 void Window::run()
 {
-    constexpr float max_fps = 240.f;
-    constexpr float max_frame_time = 1.f / max_fps;
+    constexpr float MAX_FPS = 120.f;
+    constexpr float FRAME_TIME = 1.f / MAX_FPS;
+
     float last_time = glfwGetTime();
+    float last_update_time = glfwGetTime();
+    float accumulated_time = 0.f;
 
     while (!glfwWindowShouldClose(m_window))
     {
         float current_time = glfwGetTime();
         float dt = current_time - last_time;
         last_time = current_time;
+        accumulated_time += dt;
 
-        update_frame_counter(dt);
         glfwPollEvents();
-        update(dt);
-        render();
 
-        float frame_time = glfwGetTime() - current_time;
-        if (frame_time < max_frame_time)
+        if (accumulated_time >= FRAME_TIME)
         {
-            std::this_thread::sleep_for(std::chrono::duration<float>(max_frame_time - frame_time));
+            float update_dt = current_time - last_update_time;
+            last_update_time = current_time;
+            accumulated_time = 0.f;
+
+            update_frame_counter(update_dt);
+            update(update_dt);
+            render();
         }
     }
 }

@@ -38,7 +38,6 @@ WindowBase::WindowBase(uint32_t width, uint32_t height)
         throw std::runtime_error("WindowBase::WindowBase: Failed to create window\n");
     }
 
-    glfwSwapInterval(0);
     glfwMakeContextCurrent(m_window);
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
