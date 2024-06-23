@@ -42,7 +42,6 @@ void Window::run()
             last_update_time = current_time;
             accumulated_time = 0.f;
 
-            update_frame_counter(update_dt);
             update(update_dt);
             render();
         }
@@ -74,18 +73,4 @@ void Window::render()
 
     imgui_context.end();
     glfwSwapBuffers(m_window);
-}
-
-// fps counter
-void Window::update_frame_counter(float dt)
-{
-    fps_update_time += dt;
-    ++m_frame_count;
-
-    if (fps_update_time > 1)
-    {
-        std::cout << "Fps: " << m_frame_count << '\n';
-        m_frame_count = 0;
-        fps_update_time -= 1;
-    }
 }

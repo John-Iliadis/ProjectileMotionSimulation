@@ -20,7 +20,6 @@ public:
 private:
     void update(float dt);
     void render();
-    void update_frame_counter(float dt);
 
     static void key_callback(GLFWwindow* p_window, int key, int scancode, int action, int mods);
 
