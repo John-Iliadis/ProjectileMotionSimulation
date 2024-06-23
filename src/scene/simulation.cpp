@@ -179,7 +179,7 @@ void Simulation::render()
 {
     render_vectors();
     m_projectile.render();
-    m_trajectory.render();
+    m_show_trajectory? m_trajectory.render() : void(0);
     control_panel();
 }
 
