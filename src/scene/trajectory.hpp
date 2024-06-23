@@ -31,8 +31,8 @@ public:
     void clear();
 
 private:
-    float x(const float time);
-    float y(const float time);
+    inline float x(const float time);
+    inline float y(const float time);
 
 private:
     std::vector<glm::vec2> m_lines;

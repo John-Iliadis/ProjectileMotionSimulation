@@ -67,7 +67,7 @@ namespace utils
     {
         static auto f = [] (float param, const auto& arr) -> float
         {
-            const float power = arr.size() == 5? 4 : 3;
+            const int power = arr.size() == 5? 4 : 3;
             float val = 0;
 
             for (size_t i = 0; i < power + 1; ++i)
@@ -83,7 +83,7 @@ namespace utils
         constexpr float initial_guess = 1.f;
 
         // Newton-Raphson
-        float solution = initial_guess;//, old_solution = initial_guess;
+        float solution = initial_guess;
         for (uint32_t i = 0; i < max_iterations; ++i)
         {
             float y = f(solution, poly4);

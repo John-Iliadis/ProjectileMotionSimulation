@@ -11,6 +11,7 @@ Trajectory::Trajectory()
     : m_initial_position()
     , m_initial_velocity()
     , m_gravity()
+    , m_meter_as_pixels()
     , m_color(1.f)
 {
 }
@@ -30,44 +31,35 @@ Trajectory::Trajectory(const glm::vec2 &initial_position,
 
 void Trajectory::update(const float simulation_time)
 {
-    clear();
+    m_lines.clear();
 
-    glm::vec2 velocity = m_initial_velocity;
-    glm::vec2 last_position = m_initial_position;
-    float time = 0;
+    constexpr float TIME_STEP = 0.001f;
+
+    glm::vec2 pos0 = m_initial_position;
+
+    float time = TIME_STEP;
     bool line_spacing = false;
 
     while (time < simulation_time)
     {
-        // polynomial g^2 * t^4 - Vy * g * t^3 + (Vx^2 + Vy^2)t^2 - L^2 = 0
-        // solve for t
-        std::array<float, 5> poly4
+        glm::vec2 pos1 = {x(time), y(time)};
+
+        float hyp = std::hypot(pos1.x - pos0.x, pos1.y - pos0.y);
+
+        if (hyp >= LINE_LENGTH)
         {
-            std::pow(m_gravity, 2.f) / 4.f,
-            - velocity.y * m_gravity,
-            std::pow(velocity.x, 2.f) + std::pow(velocity.y, 2.f),
-            0,
-            - std::pow(LINE_LENGTH / m_meter_as_pixels, 2.f)
-        };
+            if (!line_spacing)
+            {
+                m_lines.push_back(pos0);
+                m_lines.push_back(pos1);
+            }
 
-        float t = utils::poly4_root(poly4);
-
-        time = time + t < simulation_time? time + t : simulation_time;
-
-        glm::vec2 new_pos = {x(time), y(time)};
-
-        if (!line_spacing)
-        {
-            m_lines.push_back(glm::vec2(last_position));
-            m_lines.push_back(new_pos);
+            pos0 = pos1;
+            line_spacing = !line_spacing;
         }
 
-        line_spacing = !line_spacing;
-        last_position = new_pos;
-        velocity.y = m_initial_velocity.y - m_gravity * time; // Vy = Voy - gt
+        time += TIME_STEP;
     }
-
-    // todo: break when going out of bounds
 }
 
 void Trajectory::render()

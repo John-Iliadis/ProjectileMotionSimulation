@@ -148,17 +148,17 @@ void Simulation::update_projectile()
 
 void Simulation::update_trajectory()
 {
-    if (!m_show_trajectory)
+    if (!m_show_trajectory || m_initial_angle == 90.f)
         return;
 
     m_trajectory.set_meter_as_pixels(m_meter_as_pixels);
-    m_trajectory.set_initial_position(m_graph->get_origin());
 
     switch (m_state)
     {
         case State::INIT:
         {
             m_trajectory.set_gravity(m_gravity);
+            m_trajectory.set_initial_position(m_position);
             m_trajectory.set_initial_velocity({m_initial_velocity * glm::cos(glm::radians(m_initial_angle)),
                                                m_initial_velocity * glm::sin(glm::radians(m_initial_angle))});
             break;
@@ -168,6 +168,7 @@ void Simulation::update_trajectory()
         case State::PAUSED:
         case State::FINISHED:
         {
+            m_trajectory.set_initial_position({m_origin.x, m_origin.y + m_initial_height * m_meter_as_pixels});
             m_trajectory.update(m_simulation_time);
             break;
         }
@@ -178,7 +179,7 @@ void Simulation::render()
 {
     render_vectors();
     m_projectile.render();
-    m_show_trajectory? m_trajectory.render() : void(0);
+    m_trajectory.render();
     control_panel();
 }
 
@@ -225,7 +226,7 @@ void Simulation::control_panel()
 
         ImGui::BeginDisabled(m_state == State::INIT);
         if (ImGui::Button("Reset", BUTTON_SIZE))
-            { m_state = State::INIT; reset(); m_trajectory.clear(); }
+            { m_state = State::INIT; reset(); }
         ImGui::EndDisabled();
     }
 
@@ -322,4 +323,5 @@ void Simulation::reset()
     m_state = State::INIT;
     m_position = m_origin;
     m_simulation_time = 0;
+    m_trajectory.clear();
 }
