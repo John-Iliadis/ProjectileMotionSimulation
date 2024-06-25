@@ -17,12 +17,23 @@ Texture::Texture(const char *file_name)
 {
     stbi_set_flip_vertically_on_load(true);
 
-    int channels; // todo: work out format
+    int channels;
     uint8_t* data = stbi_load(file_name, &m_width, &m_height, &channels, 0);
 
     if (!data)
     {
         throw std::runtime_error("Texture::Texture: Failed to load" + std::string(file_name));
+    }
+
+    int format;
+
+    switch (channels)
+    {
+        case 1: format = GL_RED; break;
+        case 2: format = GL_RG; break;
+        case 3: format = GL_RGB; break;
+        case 4: format = GL_RGBA; break;
+        default: assert(false);
     }
 
     glCreateTextures(GL_TEXTURE_2D, 1, &m_renderer_id);
@@ -33,7 +44,7 @@ Texture::Texture(const char *file_name)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
