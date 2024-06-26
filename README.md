@@ -1,7 +1,7 @@
 # Projectile Motion Simulator
 
 - Written in C++
-- OpenGL was used for all rendering
+- OpenGL was used for rendering
 - FreeType was used for font rendering
 - ImGUI was used for the gui
 
