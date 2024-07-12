@@ -7,7 +7,7 @@
 
 #include "../rendering/rendering_includes.hpp"
 #include "../imgui/imgui_context.hpp"
-#include "../scene/scene.hpp"
+#include "../simulation/scene.hpp"
 #include "window_base.hpp"
 
 
@@ -26,8 +26,6 @@ private:
 private:
     IMGUI_Context imgui_context;
     Scene m_scene;
-    double fps_update_time;
-    uint32_t m_frame_count;
 };
 
 

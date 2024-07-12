@@ -10,8 +10,6 @@ Window::Window(uint32_t width, uint32_t height)
     : WindowBase(width, height)
     , imgui_context(m_window)
     , m_scene(width, height)
-    , fps_update_time()
-    , m_frame_count()
 {
     glfwSetWindowUserPointer(m_window, this);
     glfwSetKeyCallback(m_window, key_callback);
@@ -61,13 +59,13 @@ void Window::key_callback(GLFWwindow *p_window, int key, int scancode, int actio
 
 void Window::update(float dt)
 {
+    imgui_context.begin();
     m_scene.update(dt);
 }
 
 void Window::render()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    imgui_context.begin();
 
     m_scene.render();
 

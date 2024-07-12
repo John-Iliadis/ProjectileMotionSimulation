@@ -17,7 +17,7 @@
 #include "../rendering/vertex_buffer_dynamic.hpp"
 #include "../rendering/index_buffer_dynamic.hpp"
 #include "../camera/orthographic_camera.hpp"
-#include "../scene/vector.hpp"
+#include "../simulation/vector.hpp"
 #include "renderer2D_constants.hpp"
 #include "font_atlas.hpp"
 #include "text.hpp"

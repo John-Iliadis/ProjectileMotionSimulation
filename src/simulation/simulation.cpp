@@ -151,12 +151,14 @@ void Simulation::update_trajectory()
     if (!m_show_trajectory || m_initial_angle == 90.f)
         return;
 
+    m_trajectory.update(m_simulation_time);
     m_trajectory.set_meter_as_pixels(m_meter_as_pixels);
 
     switch (m_state)
     {
         case State::INIT:
         {
+            m_trajectory.set_duration(m_duration);
             m_trajectory.set_gravity(m_gravity);
             m_trajectory.set_initial_position(m_position);
             m_trajectory.set_initial_velocity({m_initial_velocity * glm::cos(glm::radians(m_initial_angle)),
@@ -179,7 +181,7 @@ void Simulation::render()
 {
     render_vectors();
     m_projectile.render();
-    m_show_trajectory? m_trajectory.render() : void(0);
+    render_trajectory();
     control_panel();
 }
 
@@ -197,6 +199,14 @@ void Simulation::render_vectors()
     }
 }
 
+void Simulation::render_trajectory()
+{
+    if (!m_show_trajectory || m_initial_angle == 90.f)
+        return;
+
+    m_trajectory.render();
+}
+
 void Simulation::control_panel()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 4.f));
@@ -209,7 +219,7 @@ void Simulation::control_panel()
 
         ImGui::BeginDisabled(m_state != State::INIT);
         if (ImGui::Button("Start", BUTTON_SIZE))
-            { m_state = State::RUNNING; }
+            { m_state = State::RUNNING; m_trajectory.make_lines(); }
         ImGui::EndDisabled();
         ImGui::SameLine(0.f, 4.f);
 
@@ -285,13 +295,23 @@ void Simulation::control_panel()
 
         ImGui::BeginDisabled(m_graph->get_zoom_level() == 0);
         if (ImGui::Button("Zoom in", BUTTON_SIZE))
-            { m_graph->zoom_in(); }
+        {
+            m_graph->zoom_in();
+            m_trajectory.set_meter_as_pixels(m_graph->get_meter_as_pixels());
+            m_trajectory.set_initial_position({m_graph->get_origin().x, m_graph->get_origin().y + m_initial_height * m_graph->get_meter_as_pixels()});
+            m_trajectory.make_lines();
+        }
         ImGui::SameLine(0.f, 4.f);
         ImGui::EndDisabled();
 
         ImGui::BeginDisabled(m_graph->get_zoom_level() == m_graph->get_max_zoom_level());
         if (ImGui::Button("Zoom out", BUTTON_SIZE))
-            { m_graph->zoom_out(); }
+        {
+            m_graph->zoom_out();
+            m_trajectory.set_meter_as_pixels(m_graph->get_meter_as_pixels());
+            m_trajectory.set_initial_position({m_graph->get_origin().x, m_graph->get_origin().y + m_initial_height * m_graph->get_meter_as_pixels()});
+            m_trajectory.make_lines();
+        }
         ImGui::EndDisabled();
     }
 
@@ -323,5 +343,4 @@ void Simulation::reset()
     m_state = State::INIT;
     m_position = m_origin;
     m_simulation_time = 0;
-    m_trajectory.clear();
 }
