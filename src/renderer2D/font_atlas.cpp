@@ -6,7 +6,6 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
-#include <iostream>
 
 extern FT_Library ft_library;
 
