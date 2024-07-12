@@ -98,8 +98,8 @@ void Vector::init()
 
 void Vector::render_impl(const Vector &vector)
 {
-    constexpr float e = 1e-2f;
-    if (std::fabs(vector.m_magnitude.x) < e && std::fabs(vector.m_magnitude.y) < e)
+    constexpr float precision = 1e-2f;
+    if (std::fabs(vector.m_magnitude.x) < precision && std::fabs(vector.m_magnitude.y) < precision)
         return;
 
     const glm::vec2& pos = vector.m_position;

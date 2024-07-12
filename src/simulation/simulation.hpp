@@ -49,6 +49,7 @@ private:
     void update_trajectory();
     void update_vectors();
     void render_vectors();
+    void render_trajectory();
     void control_panel();
 
 private:

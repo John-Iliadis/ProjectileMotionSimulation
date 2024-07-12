@@ -52,29 +52,29 @@ add_executable(${PROJECT_NAME}
         src/imgui/imgui_context.hpp
         src/camera/orthographic_camera.cpp
         src/camera/orthographic_camera.hpp
-        src/scene/scene.cpp
-        src/scene/scene.hpp
-        src/scene/graph.cpp
-        src/scene/graph.hpp
+        src/simulation/scene.cpp
+        src/simulation/scene.hpp
+        src/simulation/graph.cpp
+        src/simulation/graph.hpp
         src/renderer2D/font_atlas.cpp
         src/renderer2D/font_atlas.hpp
         src/renderer2D/renderer2D.cpp
         src/renderer2D/renderer2D.hpp
         src/renderer2D/text.hpp
         src/renderer2D/renderer2D_includes.hpp
-        src/scene/vector.cpp
-        src/scene/vector.hpp
-        src/scene/simulation.cpp
-        src/scene/simulation.hpp
+        src/simulation/vector.cpp
+        src/simulation/vector.hpp
+        src/simulation/simulation.cpp
+        src/simulation/simulation.hpp
         src/renderer2D/renderer2D_constants.hpp
         src/rendering/uniform_buffer_object_dynamic.cpp
         src/rendering/uniform_buffer_object_dynamic.hpp
         src/rendering/texture.cpp
         src/rendering/texture.hpp
-        src/scene/projectile.cpp
-        src/scene/projectile.hpp
-        src/scene/trajectory.cpp
-        src/scene/trajectory.hpp)
+        src/simulation/projectile.cpp
+        src/simulation/projectile.hpp
+        src/simulation/trajectory.cpp
+        src/simulation/trajectory.hpp)
 
 find_package(OpenGL REQUIRED)
 
