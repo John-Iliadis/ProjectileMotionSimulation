@@ -9,7 +9,7 @@
 #include <imgui/imgui.h>
 #include <memory>
 #include <mutex>
-#include "../rendering/rendering_includes.hpp"
+#include "../opengl/includes.hpp"
 
 
 class Vector

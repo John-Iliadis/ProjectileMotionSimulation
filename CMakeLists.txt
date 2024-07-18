@@ -29,25 +29,25 @@ add_executable(${PROJECT_NAME}
         src/window/window.hpp
         src/window/window_base.cpp
         src/window/window_base.hpp
-        src/rendering/shader.cpp
-        src/rendering/shader.hpp
-        src/rendering/vertex_buffer_static.cpp
-        src/rendering/vertex_buffer_static.hpp
-        src/rendering/index_buffer_static.cpp
-        src/rendering/index_buffer_static.hpp
-        src/rendering/vertex_buffer_layout.cpp
-        src/rendering/vertex_buffer_layout.hpp
-        src/rendering/vertex_array.cpp
-        src/rendering/vertex_array.hpp
-        src/rendering/frame_buffer.cpp
-        src/rendering/frame_buffer.hpp
-        src/rendering/rendering_includes.hpp
-        src/rendering/vertex_buffer_dynamic.cpp
-        src/rendering/vertex_buffer_dynamic.hpp
-        src/rendering/index_buffer_dynamic.cpp
-        src/rendering/index_buffer_dynamic.hpp
-        src/rendering/vertex_buffer.hpp
-        src/rendering/index_buffer.hpp
+        src/opengl/shader.cpp
+        src/opengl/shader.hpp
+        src/opengl/vertex_buffer_static.cpp
+        src/opengl/vertex_buffer_static.hpp
+        src/opengl/index_buffer_static.cpp
+        src/opengl/index_buffer_static.hpp
+        src/opengl/vertex_buffer_layout.cpp
+        src/opengl/vertex_buffer_layout.hpp
+        src/opengl/vertex_array.cpp
+        src/opengl/vertex_array.hpp
+        src/opengl/frame_buffer.cpp
+        src/opengl/frame_buffer.hpp
+        src/opengl/includes.hpp
+        src/opengl/vertex_buffer_dynamic.cpp
+        src/opengl/vertex_buffer_dynamic.hpp
+        src/opengl/index_buffer_dynamic.cpp
+        src/opengl/index_buffer_dynamic.hpp
+        src/opengl/vertex_buffer.hpp
+        src/opengl/index_buffer.hpp
         src/imgui/imgui_context.cpp
         src/imgui/imgui_context.hpp
         src/camera/orthographic_camera.cpp
@@ -67,10 +67,10 @@ add_executable(${PROJECT_NAME}
         src/simulation/simulation.cpp
         src/simulation/simulation.hpp
         src/renderer2D/renderer2D_constants.hpp
-        src/rendering/uniform_buffer_object_dynamic.cpp
-        src/rendering/uniform_buffer_object_dynamic.hpp
-        src/rendering/texture.cpp
-        src/rendering/texture.hpp
+        src/opengl/uniform_buffer_object_dynamic.cpp
+        src/opengl/uniform_buffer_object_dynamic.hpp
+        src/opengl/texture.cpp
+        src/opengl/texture.hpp
         src/simulation/projectile.cpp
         src/simulation/projectile.hpp
         src/simulation/trajectory.cpp

@@ -12,10 +12,7 @@
 #include <mutex>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include "../rendering/shader.hpp"
-#include "../rendering/vertex_array.hpp"
-#include "../rendering/vertex_buffer_dynamic.hpp"
-#include "../rendering/index_buffer_dynamic.hpp"
+#include "../opengl/includes.hpp"
 #include "../camera/orthographic_camera.hpp"
 #include "../simulation/vector.hpp"
 #include "renderer2D_constants.hpp"

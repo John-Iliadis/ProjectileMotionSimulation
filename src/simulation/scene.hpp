@@ -7,8 +7,7 @@
 
 #include <glfw/glfw3.h>
 #include <imgui/imgui.h>
-#include "../rendering/uniform_buffer_object_dynamic.hpp"
-#include "../rendering/rendering_includes.hpp"
+#include "../opengl/includes.hpp"
 #include "../camera/orthographic_camera.hpp"
 #include "../renderer2D/renderer2D_includes.hpp"
 #include "graph.hpp"

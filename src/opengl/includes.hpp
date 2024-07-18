@@ -2,8 +2,8 @@
 // Created by Gianni on 20/02/2024.
 //
 
-#ifndef PROJECTILEMOTIONSIM_RENDERING_INCLUDES_HPP
-#define PROJECTILEMOTIONSIM_RENDERING_INCLUDES_HPP
+#ifndef PROJECTILEMOTIONSIM_INCLUDES_HPP
+#define PROJECTILEMOTIONSIM_INCLUDES_HPP
 
 #include "shader.hpp"
 #include "vertex_array.hpp"
@@ -14,4 +14,4 @@
 #include "uniform_buffer_object_dynamic.hpp"
 #include "texture.hpp"
 
-#endif //PROJECTILEMOTIONSIM_RENDERING_INCLUDES_HPP
+#endif //PROJECTILEMOTIONSIM_INCLUDES_HPP

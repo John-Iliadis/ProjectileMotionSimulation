@@ -5,7 +5,7 @@
 #ifndef PROJECTILEMOTIONSIM_WINDOW_HPP
 #define PROJECTILEMOTIONSIM_WINDOW_HPP
 
-#include "../rendering/rendering_includes.hpp"
+#include "../opengl/includes.hpp"
 #include "../imgui/imgui_context.hpp"
 #include "../simulation/scene.hpp"
 #include "window_base.hpp"

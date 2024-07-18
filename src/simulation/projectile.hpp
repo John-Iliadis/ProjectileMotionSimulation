@@ -8,7 +8,7 @@
 #include <memory>
 #include <mutex>
 #include <glm/glm.hpp>
-#include "../rendering/rendering_includes.hpp"
+#include "../opengl/includes.hpp"
 
 
 class Projectile
