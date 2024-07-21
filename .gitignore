@@ -1,4 +1,5 @@
 cmake-build-debug
 .idea
 notes.txt
-bin
+bin/ProjectileMotionSim.exe
+bin/ProjectileMotionSim-d.exe
