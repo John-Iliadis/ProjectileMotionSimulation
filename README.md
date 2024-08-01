@@ -2,8 +2,8 @@
 
 - Written in C++
 - OpenGL was used for rendering
-- FreeType was used for font rendering
-- ImGUI was used for the gui
+- FreeType was used for font rasterization
+- ImGUI was used for the user interface
 
 ## Preview
 
