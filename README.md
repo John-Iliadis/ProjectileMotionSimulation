@@ -1,9 +1,9 @@
 # Projectile Motion Simulator
 
-- Written in C++
-- OpenGL was used for rendering
-- FreeType was used for font rasterization
-- ImGUI was used for the user interface
+- Developed a physics-based simulator for modeling motion in two dimensions.
+- Implemented a 2D batch renderer to optimize draw calls.
+- Implemented custom text rendering using FreeType for font rasterization.
+- Created interactive vector, graph, and trajectory visualizations for analyzing the projectile’s motion.
 
 ## Preview
 
